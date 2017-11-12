@@ -1,0 +1,10 @@
+[ng-cloak] { display: none; }
+
+.element {
+	width:100px;
+	height:100px;
+	display:block;
+	position:absolute;
+	background: #777;
+	cursor: pointer;
+}
