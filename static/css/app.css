@@ -5,6 +5,7 @@
 	height:100px;
 	display:block;
 	position:absolute;
-	background: #777;
+	background-repeat: no-repeat;
+	background-size: contain;
 	cursor: pointer;
 }

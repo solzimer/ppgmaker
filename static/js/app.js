@@ -6,8 +6,8 @@ angular.module('ppgmaker', []).config(function () {
 	$scope.play = -1;
 
 	$scope.items = [
-		{buffer:[]},
-		{buffer:[]},
+		{src:"/img/bliss001.png",buffer:[]},
+		{src:"/img/bliss002.png",buffer:[]},
 	]
 
 	$scope.toggleRecord = function() {
