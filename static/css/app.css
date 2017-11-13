@@ -1,8 +1,22 @@
 [ng-cloak] { display: none; }
 
+html, body {height: 100%}
+
+.fill {
+	height: 100%;
+	overflow: hidden;
+}
+
+.element-container {
+	width:auto;
+	position: relative;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
 .element {
-	width:100px;
-	height:100px;
+	width:200px;
+	height:200px;
 	display:block;
 	position:absolute;
 	background-repeat: no-repeat;

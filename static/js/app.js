@@ -5,6 +5,10 @@ angular.module('ppgmaker', []).config(function () {
 	$scope.record = false;
 	$scope.play = -1;
 
+	$scope.background = {
+		src : "/img/bg/Background.png"
+	}
+
 	$scope.items = [
 		{src:"/img/bliss001.png",buffer:[]},
 		{src:"/img/bliss002.png",buffer:[]},

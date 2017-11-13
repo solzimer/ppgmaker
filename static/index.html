@@ -8,16 +8,13 @@
 	<link rel="stylesheet" href="/css/app.css">
 </head>
 <body ng-app="ppgmaker" ng-controller="MainController">
-	<h1>Funciona!</h1>
-	<div class="row">
-		<div class="col-lg-3 col-md-3 col-sm-3">
-			<button class="btn btn-primary" ng-click="toggleRecord()">Record</button>
-			<button class="btn btn-primary" ng-click="togglePlay()">Play</button>
-		</div>
-		<div class="col-lg-9 col-md-9 col-sm-9">
-			<div style="width:640px;height:480px;background:#222" ppg-play="play">
-				<div ng-repeat="item in items" class="element" ppg-record="item.buffer" record="record" style="background-image:url('{{item.src}}')">
-				</div>
+	<div style="position:absolute;z-index:10000">
+		<button class="btn btn-primary" ng-click="toggleRecord()">Record</button>
+		<button class="btn btn-primary" ng-click="togglePlay()">Play</button>
+	</div>
+	<div class="fill">
+		<div class="element-container fill" ppg-play="play" style="background-image:url('{{background.src}}')">
+			<div ng-repeat="item in items" class="element" ppg-record="item.buffer" record="record" style="background-image:url('{{item.src}}')">
 			</div>
 		</div>
 	</div>
