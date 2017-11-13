@@ -8,6 +8,7 @@ html, body {height: 100%}
 }
 
 .element-container {
+	transform: scale3d(1.0);
 	width:auto;
 	position: relative;
 	background-repeat: no-repeat;
@@ -24,4 +25,5 @@ html, body {height: 100%}
 	background-repeat: no-repeat;
 	background-size: contain;
 	cursor: pointer;
+	-webkit-filter: drop-shadow(12px 12px 25px rgba(0,0,0,0.5));
 }
