@@ -5,12 +5,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Powerpuff Girls Maker</title>
 	<link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/font-awesome.min.css">
 	<link rel="stylesheet" href="/css/app.css">
+	<link rel="stylesheet" href="/css/frames.css">
 </head>
 <body ng-app="ppgmaker" ng-controller="MainController">
-	<div style="position:absolute;z-index:10000">
-		<button class="btn btn-primary" ng-click="toggleRecord()">Record</button>
-		<button class="btn btn-primary" ng-click="togglePlay()">Play</button>
+	<div class="frame-bottom purple cover" style="position:absolute;z-index:1000">
+		<button class="btn btn-primary" ng-click="toggleRecord()"><i class="fa" ng-class="{'fa-circle':!record,'fa-pause':record}"></i></button>
+		<button class="btn btn-primary" ng-click="togglePlay()"><i class="fa" ng-class="{'fa-play':play<0,'fa-stop':play>=0}"></i></button>
 	</div>
 	<div class="fill">
 		<div class="element-container fill" ppg-play="play" style="background-image:url('{{background.src}}')">

@@ -1,0 +1,28 @@
+.frame-bottom {
+	border:none;
+	border-radius: 0 0 15px 15px;
+	padding: 15px 10px 30px 30px;
+}
+
+.frame-bottom:after {
+  content: "";
+  display: block;
+  position: absolute;
+	left:15px;top:0;
+  border-radius: 0 0 15px 15px;
+	z-index:-1;
+	width: calc(100% - 30px);
+	height: calc(100% - 15px);
+}
+
+.frame-bottom.pink {background-color: #b9247d;}
+.frame-bottom.pink:after {background-color: #ffa9dc;}
+
+.frame-bottom.orange {background-color: #f97503;}
+.frame-bottom.orange:after {background-color: #ffcb9e;}
+
+.frame-bottom.green {background-color: #369a02;}
+.frame-bottom.green:after {background-color: #abf386;}
+
+.frame-bottom.purple {background-color: #970eec;}
+.frame-bottom.purple:after {background-color: #cf9fec;}
