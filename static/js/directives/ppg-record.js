@@ -9,7 +9,7 @@ angular.module('ppgmaker').directive("ppgRecord",function($interval){
 				var item = items[id];
 				if(item.scope.record) {
 					var pos = item.element.position();
-					item.item.buffer.push(pos);
+					item.buffer.push(pos);
 				}
 			}
 			recordItems();
@@ -20,9 +20,9 @@ angular.module('ppgmaker').directive("ppgRecord",function($interval){
 		var id = "drag_"+(uid++);
 		var drg = $(element).draggable();
 		var initPos = $(element).position();
-		var item = scope.ppgRecord;
+		var buffer = scope.ppgRecord;
 
-		if(!item.buffer) item.buffer = [];
+		if(!buffer) buffer = [];
 
 		scope.$on("$destroy",function(){
 			delete elems[id];
@@ -32,7 +32,7 @@ angular.module('ppgmaker').directive("ppgRecord",function($interval){
 		items[id] = {
 			scope:scope,
 			element:element,
-			item:item
+			buffer:buffer
 		};
 	}
 
