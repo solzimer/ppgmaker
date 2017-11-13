@@ -11,7 +11,9 @@ html, body {height: 100%}
 	width:auto;
 	position: relative;
 	background-repeat: no-repeat;
-	background-size: cover;
+	background-size: 100%;
+	background-position: center;
+	background-color: #000;
 }
 
 .element {
