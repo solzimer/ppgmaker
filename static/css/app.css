@@ -32,5 +32,5 @@ html, body {height: 100%}
 	cursor: pointer;
 	z-index: 100000;
 	touch-action: manipulation;
-	-webkit-filter: drop-shadow(6px 6px 6px rgba(0,0,0,0.8));
+	/*-webkit-filter: drop-shadow(6px 6px 6px rgba(0,0,0,0.8));*/
 }

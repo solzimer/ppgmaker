@@ -20,6 +20,7 @@
     "angular": "^1.6.6",
     "bootstrap": "^3.3.7",
     "jquery-ui": "^1.12.1",
-    "jquery-ui-touch-punch": "*"
+    "jquery-ui-touch-punch": "*",
+    "jqueryui-touch-punch": "*"
   }
 }
