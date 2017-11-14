@@ -3,6 +3,7 @@ angular.module('ppgmaker').directive("ppgPlay",function($q) {
 	var uid = 0;
 
 	function animate() {
+		requestAnimationFrame(animate);
 		for(key in items) {
 			var item = items[key];
 			if(item.frame>=0) {
@@ -16,7 +17,6 @@ angular.module('ppgmaker').directive("ppgPlay",function($q) {
 				}
 			}
 		}
-		requestAnimationFrame(animate);
 	}
 
 	function getId(el) {
@@ -45,7 +45,7 @@ angular.module('ppgmaker').directive("ppgPlay",function($q) {
 		});
 	}
 
-	animate();
+	requestAnimationFrame(animate);
 	return {
 		link : link,
 		scope : {
