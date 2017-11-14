@@ -16,22 +16,23 @@
 	</div>
 	<div class="fill">
 		<div class="element-container fill" ppg-play="play" style="background-image:url('{{background.src}}')">
-			<div ng-repeat="item in items" class="element" ppg-record="item.buffer" ppg-effects="item.effects" record="record" style="background-image:url('{{item.src}}')">
+			<div ng-repeat="item in items" class="element" ppg-draggable ppg-record="item.buffer" ppg-effects="item.effects" record="record" style="background-image:url('{{item.src}}')">
 			</div>
 		</div>
 	</div>
 
 	<!-- Core scripts -->
 	<script src="/jquery/dist/jquery.min.js"></script>
-	<script src="/jquery-ui/jquery-ui.min.js"></script>
-	<script src="/jqueryui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+	<script src="/hammerjs/hammer.min.js"></script>
 	<script src="/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script src="/angular/angular.min.js"></script>
 	<script src="/tween.js/src/Tween.js"></script>
 
 	<!-- Application scripts -->
 	<script src="/js/app.js"></script>
+	<script src="/js/directives/ppg-draggable.js"></script>
 	<script src="/js/directives/ppg-record.js"></script>
 	<script src="/js/directives/ppg-play.js"></script>
+	<script src="/js/services/itemsService.js"></script>
 </body>
 </html>

@@ -1,0 +1,22 @@
+{
+	"items" : [
+		{
+			"id" : "powerpuff",
+			"order" : 0,
+			"items" :	[
+				{"id":"bubbles001", "src":"/img/bubbles/bubbles001.png","buffer":[]},
+				{"id":"bubbles002", "src":"/img/bubbles/bubbles001.png","buffer":[]},
+				{"id":"bubbles003", "src":"/img/bubbles/bubbles001.png","buffer":[]},
+				{"id":"bubbles004", "src":"/img/bubbles/bubbles001.png","buffer":[]},
+				{"id":"buttercup001", "src":"/img/buttercup/buttercup001.png","buffer":[]},
+				{"id":"buttercup002", "src":"/img/buttercup/buttercup002.png","buffer":[]},
+				{"id":"buttercup003", "src":"/img/buttercup/buttercup003.png","buffer":[]},
+				{"id":"buttercup004", "src":"/img/buttercup/buttercup004.png","buffer":[]},
+				{"id":"buttercup005", "src":"/img/buttercup/buttercup005.png","buffer":[]},
+				{"id":"buttercup006", "src":"/img/buttercup/buttercup006.png","buffer":[]},
+				{"id":"bliss001", "src":"/img/bliss/bliss001.png","buffer":[]},
+				{"id":"bliss002", "src":"/img/bliss/bliss002.png","buffer":[]}
+			]
+		}
+	]
+}

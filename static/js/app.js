@@ -1,6 +1,6 @@
-angular.module('ppgmaker', []).config(function () {
+angular.module('ppgmaker', []).config(function() {
 	console.log("App started!");
-}).controller("MainController",function($scope){
+}).controller("MainController",function($scope,itemsService){
 
 	$scope.record = false;
 	$scope.play = -1;
@@ -15,6 +15,13 @@ angular.module('ppgmaker', []).config(function () {
 		{src:"/img/bubbles/bubbles001.png",buffer:[]},
 	]
 
+	function init() {
+		itemsService.get().then(function(items){
+			$scope.allitems = items;
+			console.log(items);
+		});
+	}
+
 	$scope.toggleRecord = function() {
 		$scope.record = !$scope.record;
 	}
@@ -23,4 +30,5 @@ angular.module('ppgmaker', []).config(function () {
 		$scope.play = $scope.play? 0 : -1;
 	}
 
+	init();
 });

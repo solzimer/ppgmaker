@@ -1,7 +1,6 @@
 angular.module('ppgmaker').directive("ppgRecord",function($interval){
 	var uid = 0;
 	var items = {};
-	var now = Date.now();
 
 	function recordItems() {
 		requestAnimationFrame(recordItems);
@@ -17,15 +16,12 @@ angular.module('ppgmaker').directive("ppgRecord",function($interval){
 
 	function link(scope, element, attrs) {
 		var id = "drag_"+(uid++);
-		var drg = $(element).draggable();
-		var initPos = $(element).position();
 		var buffer = scope.$eval(attrs.ppgRecord);
 
 		if(!buffer) buffer = [];
 
 		scope.$on("$destroy",function(){
 			delete elems[id];
-			drg.destroy();
 		});
 
 		items[id] = {
