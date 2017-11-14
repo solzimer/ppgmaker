@@ -4,23 +4,22 @@ angular.module('ppgmaker').directive("ppgRecord",function($interval){
 	var now = Date.now();
 
 	function recordItems() {
-		requestAnimationFrame(function(){
-			for(var id in items) {
-				var item = items[id];
-				if(item.scope.record) {
-					var pos = item.element.position();
-					item.buffer.push(pos);
-				}
+		requestAnimationFrame(recordItems);
+		for(var id in items) {
+			var item = items[id];
+			var record = item.scope.$eval("record");
+			if(item.scope.record) {
+				var pos = item.element.position();
+				item.buffer.push(pos);
 			}
-			recordItems();
-		});
+		}
 	}
 
 	function link(scope, element, attrs) {
 		var id = "drag_"+(uid++);
 		var drg = $(element).draggable();
 		var initPos = $(element).position();
-		var buffer = scope.ppgRecord;
+		var buffer = scope.$eval(attrs.ppgRecord);
 
 		if(!buffer) buffer = [];
 
@@ -36,12 +35,8 @@ angular.module('ppgmaker').directive("ppgRecord",function($interval){
 		};
 	}
 
-	recordItems();
+	requestAnimationFrame(recordItems);
 	return {
 		link : link,
-		scope : {
-			"ppgRecord" : "=",
-			"record" : "="
-		}
 	}
 });

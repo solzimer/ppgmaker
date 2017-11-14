@@ -1,32 +1,27 @@
 angular.module('ppgmaker').directive("ppgPlay",function($q) {
 	var items = {};
+	var uid = 0;
 
 	function animate() {
-		requestAnimationFrame(function(){
-			for(key in items) {
-				var item = items[key];
-				if(item.frame>=0) {
-					var pos = item.buffer[item.frame];
-					if(pos) {
-						$(item.elem).css(pos);
-						item.frame++;
-					}
-					else {
-						item.frame = -1;
-					}
+		for(key in items) {
+			var item = items[key];
+			if(item.frame>=0) {
+				var pos = item.buffer[item.frame];
+				if(pos) {
+					$(item.elem).css(pos);
+					item.frame++;
+				}
+				else {
+					item.frame = -1;
 				}
 			}
-			animate();
-		});
+		}
+		requestAnimationFrame(animate);
 	}
 
-	function getBuffer(scope,expr) {
-		try {
-			return eval("scope."+expr);
-		}catch(err) {
-			console.error(err);
-			return [];
-		}
+	function getId(el) {
+		if(!el.attr("id")) el.attr("id","ppgplay_"+(uid++));
+		return el.attr("id");
 	}
 
 	function link(scope,element,attrs) {
@@ -34,19 +29,17 @@ angular.module('ppgmaker').directive("ppgPlay",function($q) {
 			var elems = document.querySelectorAll("[ppg-record]",element);
 			elems.forEach(function(el){
 				el = angular.element(el);
-				if(!el.attr("id")) el.attr("id","ppgplay_"+Math.random());
-				var id = el.attr("id");
-				var buffer = getBuffer(el.scope(),el.attr("ppg-record"));
+				var id = getId(el);
+				var buffer = el.scope().$eval(el.attr("ppg-record"));
 				items[id] = {frame:frame, elem:el, buffer:buffer}
 			});
 		});
 
-		$scope.$on("$destroy",function(){
+		scope.$on("$destroy",function(){
 			var elems = document.querySelectorAll("[ppg-record]",element);
 			elems.forEach(function(el){
 				el = angular.element(el);
-				if(!el.attr("id")) el.attr("id","ppgplay_"+Math.random());
-				var id = el.attr("id");
+				var id = getId(el);
 				delete items[id];
 			});
 		});
