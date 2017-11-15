@@ -22,6 +22,8 @@
 	</div>
 
 	<!-- Core scripts -->
+	<script src="/TouchEmulator/touch-emulator.js"></script>
+	<script>TouchEmulator();</script>
 	<script src="/jquery/dist/jquery.min.js"></script>
 	<!--script src="/jquery-ui/jquery-ui.min.js"></script>
 	<script src="/jqueryui-touch-punch/jquery.ui.touch-punch.min.js"></script-->
@@ -36,5 +38,15 @@
 	<script src="/js/directives/ppg-record.js"></script>
 	<script src="/js/directives/ppg-play.js"></script>
 	<script src="/js/services/itemsService.js"></script>
+
+	<script>
+		function log(ev) {
+		 console.log(ev);
+		}
+
+		document.body.addEventListener('touchstart', log, false);
+		document.body.addEventListener('touchmove', log, false);
+		document.body.addEventListener('touchend', log, false);
+	</script>
 </body>
 </html>
