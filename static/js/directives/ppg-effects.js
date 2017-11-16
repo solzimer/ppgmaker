@@ -9,6 +9,13 @@ angular.module('ppgmaker').directive("ppgEffects",function($interval){
 		for(var i=0;i<max;i++) {
 			frames[i] = Math.sin(i*Math.PI/180) - 0.5;
 		}
+
+		frames.push(frames[0]);
+		for(var i=0;i<max;i++) {
+			frames[i] = frames[(i+1)%(max+1)] - frames[i];
+		}
+		frames.pop();
+		console.log(frames);
 	}
 
 	function applyEffects() {
@@ -23,7 +30,7 @@ angular.module('ppgmaker').directive("ppgEffects",function($interval){
 				elem.css(pos);
 			}
 		}
-		frame = (frame+1) % max;
+		frame = (frame+5) % max;
 	}
 
 	function link(scope, element, attrs) {
