@@ -7,7 +7,7 @@ angular.module('ppgmaker').directive("ppgRecord",function($interval){
 		for(var id in items) {
 			var item = items[id];
 			var record = item.scope.$eval("record");
-			if(item.scope.record) {
+			if(!record) {
 				var pos = item.element.position();
 				item.buffer.push(pos);
 			}
