@@ -35,8 +35,8 @@ else {
 	enableWs(app);
 	app.use(bodyParser.json());
 	app.use(cors());
-	app.use(express.static('static'));
-	app.use(express.static('bower_components'));
+	app.use('/',express.static('static'));
+	app.use('/lib',express.static('bower_components'));
 	app.listen(options.port, () => {
 		console.log(`Worker ${process.pid} started`);
 	});
