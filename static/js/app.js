@@ -1,4 +1,4 @@
-angular.module('ppgmaker', []).config(function() {
+angular.module('ppgmaker', ['ui.bootstrap']).config(function() {
 	console.log("App started!");
 }).controller("MainController",function($scope,itemsService){
 
@@ -10,8 +10,10 @@ angular.module('ppgmaker', []).config(function() {
 	}
 
 	$scope.items = [
+		/*
 		{src:"/img/bliss/bliss001.png",buffer:[]},
 		{src:"/img/buttercup/buttercup004.png",buffer:[]},
+		*/
 		{src:"/img/bubbles/bubbles001.png",buffer:[]},
 	]
 

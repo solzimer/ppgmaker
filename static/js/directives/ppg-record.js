@@ -1,4 +1,4 @@
-angular.module('ppgmaker').directive("ppgRecord",function($interval){
+angular.module('ppgmaker').directive("ppgRecord",function($interval,styleService){
 	var uid = 0;
 	var items = {};
 
@@ -8,8 +8,8 @@ angular.module('ppgmaker').directive("ppgRecord",function($interval){
 			var item = items[id];
 			var record = item.scope.$eval("record");
 			if(record) {
-				var pos = item.element.position();
-				item.buffer.push(pos);
+				var style = styleService.get(item.element);
+				item.buffer.push(style);
 			}
 		}
 	}

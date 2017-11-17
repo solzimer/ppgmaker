@@ -1,4 +1,4 @@
-angular.module('ppgmaker').directive("ppgDraggable",function(styleService) {
+angular.module('ppgmaker').directive("ppgResizable",function(styleService) {
 	var DRG = "hammer_drag";
 
 	function handleDrag(ev) {

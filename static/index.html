@@ -5,15 +5,35 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 	<title>Powerpuff Girls Maker</title>
 	<link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/lib/angular-bootstrap/ui-bootstrap-csp.css">
 	<link rel="stylesheet" href="/css/font-awesome.min.css">
 	<link rel="stylesheet" href="/css/app.css">
 	<link rel="stylesheet" href="/css/frames.css">
 </head>
 <body ng-app="ppgmaker" ng-controller="MainController">
-	<div class="frame-bottom orange cover" style="position:absolute;z-index:1000;width:90%;left:5%;">
+	<!-- Top buttons -->
+	<div class="frame-bottom orange cover" style="position:fixed;z-index:1000;width:90%;left:5%;">
 		<button class="btn btn-primary" ng-click="toggleRecord()"><i class="fa" ng-class="{'fa-circle':!record,'fa-pause':record}"></i></button>
 		<button class="btn btn-primary" ng-click="togglePlay()"><i class="fa" ng-class="{'fa-play':play<0,'fa-stop':play>=0}"></i></button>
 	</div>
+
+	<!-- Item selector -->
+	<!--div class="cover" style="position:fixed;z-index:1000;width:90%;left:5%;bottom:0">
+		<uib-tabset active="active">
+		    <uib-tab index="0" heading="Static title">Static content</uib-tab>
+		    <uib-tab index="$index + 1" ng-repeat="tab in tabs" heading="{{tab.title}}" disable="tab.disabled">
+		      {{tab.content}}
+		    </uib-tab>
+		    <uib-tab index="3" select="alertMe()">
+		      <uib-tab-heading>
+		        <i class="glyphicon glyphicon-bell"></i> Alert!
+		      </uib-tab-heading>
+		      I've got an HTML heading, and a select callback. Pretty cool!
+		    </uib-tab>
+	  </uib-tabset>
+	</div-->
+
+	<!-- Scene -->
 	<div class="fill">
 		<div class="element-container fill" ppg-play="play" style="background-image:url('{{background.src}}')">
 			<img ng-repeat="item in items" class="element" ppg-draggable ppg-record="item.buffer" ppg-effects="item.effects" record="record" play="play" ng-src="{{item.src}}" />
@@ -27,6 +47,7 @@
 	<script src="/lib/hammerjs/hammer.min.js"></script>
 	<script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script src="/lib/angular/angular.min.js"></script>
+	<script src="/lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 
 	<!-- Application scripts -->
 	<script src="/js/app.js"></script>
@@ -35,17 +56,6 @@
 	<script src="/js/directives/ppg-record.js"></script>
 	<script src="/js/directives/ppg-play.js"></script>
 	<script src="/js/services/itemsService.js"></script>
-
-	<script>
-		/*
-			function log(ev) {
-			 console.log(ev);
-			}
-
-			document.body.addEventListener('touchstart', log, false);
-			document.body.addEventListener('touchmove', log, false);
-			document.body.addEventListener('touchend', log, false);
-		*/
-	</script>
+	<script src="/js/services/styleService.js"></script>
 </body>
 </html>

@@ -22,6 +22,7 @@
     "jquery-ui": "^1.12.1",
     "jqueryui-touch-punch": "*",
     "hammerjs": "^2.0.8",
-    "TouchEmulator": "hammer-touchemulator#^0.0.2"
+    "TouchEmulator": "hammer-touchemulator#^0.0.2",
+    "angular-bootstrap": "^2.5.0"
   }
 }

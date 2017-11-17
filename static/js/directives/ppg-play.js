@@ -1,15 +1,14 @@
-angular.module('ppgmaker').directive("ppgPlay",function($q) {
+angular.module('ppgmaker').directive("ppgPlay",function(styleService) {
 	var items = {};
-	var uid = 0;
 
 	function animate() {
 		requestAnimationFrame(animate);
 		for(key in items) {
 			var item = items[key];
 			if(item.frame>=0) {
-				var pos = item.buffer[item.frame];
-				if(pos) {
-					$(item.elem).css(pos);
+				var style = item.buffer[item.frame];
+				if(style) {
+					$(item.elem).css(style);
 					item.frame++;
 				}
 				else {
@@ -29,7 +28,7 @@ angular.module('ppgmaker').directive("ppgPlay",function($q) {
 			var elems = document.querySelectorAll("[ppg-record]",element);
 			elems.forEach(function(el){
 				el = angular.element(el);
-				var id = getId(el);
+				var id = styleService.id(el);
 				var buffer = el.scope().$eval(el.attr("ppg-record"));
 				items[id] = {frame:frame, elem:el, buffer:buffer}
 			});
@@ -39,7 +38,7 @@ angular.module('ppgmaker').directive("ppgPlay",function($q) {
 			var elems = document.querySelectorAll("[ppg-record]",element);
 			elems.forEach(function(el){
 				el = angular.element(el);
-				var id = getId(el);
+				var id = styleService.id(el);
 				delete items[id];
 			});
 		});

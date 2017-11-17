@@ -1,4 +1,4 @@
-angular.module('ppgmaker').directive("ppgEffects",function($interval){
+angular.module('ppgmaker').directive("ppgEffects",function(styleService){
 	var max = 360;
 	var frame = 0;
 	var uid = 0;
@@ -15,7 +15,6 @@ angular.module('ppgmaker').directive("ppgEffects",function($interval){
 			frames[i] = frames[(i+1)%(max+1)] - frames[i];
 		}
 		frames.pop();
-		console.log(frames);
 	}
 
 	function applyEffects() {
@@ -28,6 +27,7 @@ angular.module('ppgmaker').directive("ppgEffects",function($interval){
 				var pos = elem.position();
 				pos.top += frames[frame]*10;
 				elem.css(pos);
+				styleService.set(elem,pos);
 			}
 		}
 		frame = (frame+5) % max;
