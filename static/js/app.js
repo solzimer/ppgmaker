@@ -5,22 +5,26 @@ angular.module('ppgmaker', ['ui.bootstrap']).config(function() {
 	$scope.record = false;
 	$scope.play = -1;
 
-	$scope.background = {
-		src : "/img/bg/bg002.jpg"
+	$scope.scene = {
+		background : {
+			src : "/img/bg/bg003.jpg"
+		},
+		items : [
+			{src:"/img/bubbles/bubbles001.png",buffer:[]},
+		]
 	}
-
-	$scope.items = [
-		/*
-		{src:"/img/bliss/bliss001.png",buffer:[]},
-		{src:"/img/buttercup/buttercup004.png",buffer:[]},
-		*/
-		{src:"/img/bubbles/bubbles001.png",buffer:[]},
-	]
 
 	function init() {
 		itemsService.get().then(function(items){
 			$scope.allitems = items;
 			console.log(items);
+		});
+	}
+
+	$scope.addItem = function(item) {
+		$scope.scene.items.push({
+			src : item.src,
+			buffer : []
 		});
 	}
 

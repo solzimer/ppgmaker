@@ -12,31 +12,25 @@
 </head>
 <body ng-app="ppgmaker" ng-controller="MainController">
 	<!-- Top buttons -->
-	<div class="frame-bottom orange cover" style="position:fixed;z-index:1000;width:90%;left:5%;">
+	<div class="frame frame-top orange cover" style="">
 		<button class="btn btn-primary" ng-click="toggleRecord()"><i class="fa" ng-class="{'fa-circle':!record,'fa-pause':record}"></i></button>
 		<button class="btn btn-primary" ng-click="togglePlay()"><i class="fa" ng-class="{'fa-play':play<0,'fa-stop':play>=0}"></i></button>
 	</div>
 
 	<!-- Item selector -->
-	<!--div class="cover" style="position:fixed;z-index:1000;width:90%;left:5%;bottom:0">
-		<uib-tabset active="active">
-		    <uib-tab index="0" heading="Static title">Static content</uib-tab>
-		    <uib-tab index="$index + 1" ng-repeat="tab in tabs" heading="{{tab.title}}" disable="tab.disabled">
-		      {{tab.content}}
-		    </uib-tab>
-		    <uib-tab index="3" select="alertMe()">
-		      <uib-tab-heading>
-		        <i class="glyphicon glyphicon-bell"></i> Alert!
-		      </uib-tab-heading>
-		      I've got an HTML heading, and a select callback. Pretty cool!
-		    </uib-tab>
-	  </uib-tabset>
-	</div-->
+	<uib-tabset active="active" class="frame frame-bottom pink">
+		<uib-tab ng-repeat="section in allitems.sections" index="$index">
+			<uib-tab-heading>{{section.id}}</uib-tab-heading>
+			<div style="padding:10px">
+				<img ng-repeat="item in section.items" ng-src="{{item.src}}" height="60" style="margin-right:5px" ng-click="addItem(item)"/>
+			</div>
+		</uib-tab>
+  </uib-tabset>
 
 	<!-- Scene -->
 	<div class="fill">
-		<div class="element-container fill" ppg-play="play" style="background-image:url('{{background.src}}')">
-			<img ng-repeat="item in items" class="element" ppg-draggable ppg-record="item.buffer" ppg-effects="item.effects" record="record" play="play" ng-src="{{item.src}}" />
+		<div class="element-container fill" ppg-play="play" style="background-image:url('{{scene.background.src}}')">
+			<img ng-repeat="item in scene.items" class="element" ppg-draggable ppg-record="item.buffer" ppg-effects="item.effects" record="record" play="play" ng-src="{{item.src}}" />
 		</div>
 	</div>
 
