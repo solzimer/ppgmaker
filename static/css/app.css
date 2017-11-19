@@ -33,3 +33,11 @@ html, body {height: 100%}
 	z-index: 100000;
 	touch-action: manipulation;
 }
+
+.item {
+	height:60px;
+}
+
+.item.disabled {
+	filter:grayscale();
+}

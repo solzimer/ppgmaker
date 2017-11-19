@@ -23,6 +23,7 @@
     "jqueryui-touch-punch": "*",
     "hammerjs": "^2.0.8",
     "TouchEmulator": "hammer-touchemulator#^0.0.2",
-    "angular-bootstrap": "^2.5.0"
+    "angular-bootstrap": "^2.5.0",
+    "forerunnerdb": "^2.0.5"
   }
 }
