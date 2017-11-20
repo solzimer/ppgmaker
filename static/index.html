@@ -14,12 +14,20 @@
 	<!-- Top buttons -->
 	<div class="frame frame-top orange cover">
 		<div class="row">
-			<div class="col-sm-2">
+			<div class="col-sm-3">
+				<button class="btn btn-primary" ng-click="home()"><i class="fa fa-home"></i></button>
 				<button class="btn btn-primary" ng-click="toggleRecord()"><i class="fa" ng-class="{'fa-circle':!record,'fa-pause':record}"></i></button>
 				<button class="btn btn-primary" ng-click="togglePlay()"><i class="fa" ng-class="{'fa-play':play<0,'fa-stop':play>=0}"></i></button>
+				<button class="btn btn-primary" ng-click="newScene()"><i class="fa fa-plus"></i></button>
 			</div>
-			<div class="col-sm-9" ng-show="record">
+			<div class="col-sm-8" ng-show="!scene">
+				<span ng-repeat="scene in scenes" ng-click="selectScene(scene)">{{scene.name}}</span>
+			</div>
+			<div class="col-sm-8" ng-show="scene">
 				<uib-progressbar class="progress-striped active" value="time" type="success"></uib-progressbar>
+			</div>
+			<div class="col-sm-1" ng-show="scene">
+				<button class="btn btn-primary" ng-click="backScene()"><i class="fa fa-reply"></i></button>
 			</div>
 		</div>
 	</div>
@@ -60,7 +68,8 @@
 	<script src="/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script src="/lib/angular/angular.min.js"></script>
 	<script src="/lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-	<script src="/lib/forerunnerdb/js/dist/fdb-all.min.js"></script>
+	<script src="lib/pouchdb/dist/pouchdb.min.js"></script>
+	<script src="lib/pouchdb/dist/pouchdb.find.min.js"></script>
 
 	<!-- Application scripts -->
 	<script src="/js/app.js"></script>
