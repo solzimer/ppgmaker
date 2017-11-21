@@ -9,7 +9,7 @@ angular.module('ppgmaker', ['ui.bootstrap']).config(function() {
 	$scope.record = false;
 	$scope.play = -1;
 	$scope.time = 0;
-
+	$scope.scenes = [];
 	$scope.scene = null/*{
 		background : {
 			src : "/img/bg/bg003.jpg"
@@ -20,7 +20,6 @@ angular.module('ppgmaker', ['ui.bootstrap']).config(function() {
 	}*/
 
 	function init() {
-		debugger;
 		itemsService.get().then(items=>{
 			$scope.allitems = items;
 			console.log(items);
@@ -35,6 +34,8 @@ angular.module('ppgmaker', ['ui.bootstrap']).config(function() {
 			else return film;
 		}).then(film=>{
 			$scope.film = film;
+			$scope.scenes = film.scenes;
+			$scope.$apply();
 		}).catch(err=>{
 			console.error(err);
 		});
@@ -63,7 +64,7 @@ angular.module('ppgmaker', ['ui.bootstrap']).config(function() {
 	}
 
 	$scope.newScene = function() {
-		$scope.film.add({}).then(scene=>{
+		$scope.film.add({name:"New Scene"}).then(scene=>{
 			$scope.scene = scene;
 			$scope.$apply();
 		});
@@ -83,6 +84,17 @@ angular.module('ppgmaker', ['ui.bootstrap']).config(function() {
 
 	$scope.togglePlay = function() {
 		$scope.play = $scope.play? 0 : -1;
+	}
+
+	$scope.selectScene = function(scene) {
+		scene.fetch().then(res=>{
+			$scope.scene = res;
+			$scope.$apply();
+		});
+	}
+
+	$scope.backScene = function() {
+		$scope.scene = null;
 	}
 
 	init();

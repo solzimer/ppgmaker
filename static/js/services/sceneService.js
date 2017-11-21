@@ -9,16 +9,27 @@ angular.module("ppgmaker").service("sceneService",function(){
 	}
 
 	class Scene {
-		constructor(props) {
+		constructor(props,mini) {
 			props = props || {};
 			this._id = props._id || "scene_"+Date.now();
 			this._rev = props._rev;
 			this.name = props.name || "";
 			this.frames = props.frames || 0;
 			this.background = props.background || "";
-			this.items = props.items || [];
-			this.idfilm = props.idfilm || "";
-			this.screenshot = props.screenshot || "";
+
+			if(!mini) {
+				this.items = props.items || [];
+				this.idfilm = props.idfilm || "";
+				this.screenshot = props.screenshot || "";
+			}
+		}
+
+		mini() {
+			return new Scene(this,true);
+		}
+
+		fetch() {
+			return sceneCol.get(this._id).then(res=>new Scene(res));
 		}
 
 		save() {
@@ -26,20 +37,7 @@ angular.module("ppgmaker").service("sceneService",function(){
 		}
 
 		remove() {
-			filmCol.
-				get(this.idfilm).
-				then(film=>{
-					let idx = film.idscenes.indexOf(this._id);
-					if(idx>=0) {
-						film.idscenes.splice(idx,1);
-						return filmCol.put(film);
-					}
-					else {
-						return film;
-					}
-				}).
-				then(film=>sceneCol.remove(this)).
-				then(res=>this);
+			return sceneCol.remove(this).then(res=>this);
 		}
 	}
 
@@ -49,7 +47,7 @@ angular.module("ppgmaker").service("sceneService",function(){
 			this._id = props._id || "film_"+Date.now();
 			this._rev = props._rev;
 			this.name = props.name || "";
-			this.idscenes = props.idscenes || [];
+			this.scenes = (props.scenes || []).map(scn=>(new Scene(scn)).mini());
 		}
 
 		add(scene) {
@@ -58,16 +56,25 @@ angular.module("ppgmaker").service("sceneService",function(){
 			if(!scene._id) scene = new Scene(scene);
 
 			return scene.save().then(scene=>{
-				this.idscenes.push(scene._id);
+				this.scenes.push(scene.mini());
+				return this.save();
+			}).then(res=>scene);
+		}
+
+		remove(scene) {
+			return scene.remove().then(scene=>{
+				let idx = this.scenes.findIndex(scn=>scn._id==scene._id);
+				this.scenes.splice(idx,1);
 				return this.save();
 			}).then(res=>scene);
 		}
 
 		save() {
+			this.scenes = this.scenes.map(scn=>scn.mini());
 			return filmCol.put(this).then(res=>this);
 		}
 
-		remove() {
+		drop() {
 			sceneCol.
 				bulkDocs(this.idscenes.map(del)).
 				then(res=>filmCol.remove(this)).
@@ -85,7 +92,7 @@ angular.module("ppgmaker").service("sceneService",function(){
 	}
 
 	this.getFilm = function(id) {
-		return filmCol.get(id);
+		return filmCol.get(id).then(film=>new Film(film));
 	}
 
 	this.findFilm = function(query) {

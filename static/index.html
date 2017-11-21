@@ -16,12 +16,12 @@
 		<div class="row">
 			<div class="col-sm-3">
 				<button class="btn btn-primary" ng-click="home()"><i class="fa fa-home"></i></button>
-				<button class="btn btn-primary" ng-click="toggleRecord()"><i class="fa" ng-class="{'fa-circle':!record,'fa-pause':record}"></i></button>
-				<button class="btn btn-primary" ng-click="togglePlay()"><i class="fa" ng-class="{'fa-play':play<0,'fa-stop':play>=0}"></i></button>
-				<button class="btn btn-primary" ng-click="newScene()"><i class="fa fa-plus"></i></button>
+				<button class="btn btn-primary" ng-show="scene" ng-click="toggleRecord()"><i class="fa" ng-class="{'fa-circle':!record,'fa-pause':record}"></i></button>
+				<button class="btn btn-primary" ng-show="scene" ng-click="togglePlay()"><i class="fa" ng-class="{'fa-play':play<0,'fa-stop':play>=0}"></i></button>
+				<button class="btn btn-primary" ng-show="!scene" ng-click="newScene()"><i class="fa fa-plus"></i></button>
 			</div>
 			<div class="col-sm-8" ng-show="!scene">
-				<span ng-repeat="scene in scenes" ng-click="selectScene(scene)">{{scene.name}}</span>
+				<a ng-repeat="scene in scenes" ng-click="selectScene(scene)">{{scene.name}}</a>
 			</div>
 			<div class="col-sm-8" ng-show="scene">
 				<uib-progressbar class="progress-striped active" value="time" type="success"></uib-progressbar>
