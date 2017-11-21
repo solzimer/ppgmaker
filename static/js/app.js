@@ -10,14 +10,7 @@ angular.module('ppgmaker', ['ui.bootstrap']).config(function() {
 	$scope.play = -1;
 	$scope.time = 0;
 	$scope.scenes = [];
-	$scope.scene = null/*{
-		background : {
-			src : "/img/bg/bg003.jpg"
-		},
-		items : [
-			{src:"/img/bubbles/bubbles001.png",buffer:[]},
-		]
-	}*/
+	$scope.scene = null
 
 	function init() {
 		itemsService.get().then(items=>{
