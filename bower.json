@@ -24,6 +24,7 @@
     "hammerjs": "^2.0.8",
     "TouchEmulator": "hammer-touchemulator#^0.0.2",
     "angular-bootstrap": "^2.5.0",
-    "pouchdb": "^6.3.4"
+    "pouchdb": "^6.3.4",
+    "html2canvas": "^0.4.1"
   }
 }

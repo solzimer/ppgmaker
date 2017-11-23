@@ -21,7 +21,9 @@
 				<button class="btn btn-primary" ng-show="!scene" ng-click="newScene()"><i class="fa fa-plus"></i></button>
 			</div>
 			<div class="col-sm-8" ng-show="!scene">
-				<a ng-repeat="scene in scenes" ng-click="selectScene(scene)">{{scene.name}}</a>
+				<a ng-repeat="scene in scenes" ng-click="selectScene(scene)">
+					<img src="{{scene.screenshot}}" alt="{{scene.name}}" style="height:34px"/>
+				</a>
 			</div>
 			<div class="col-sm-8" ng-show="scene">
 				<uib-progressbar class="progress-striped active" value="time" type="success"></uib-progressbar>
@@ -48,7 +50,7 @@
   </uib-tabset>
 
 	<!-- Scene -->
-	<div class="fill">
+	<div class="fill scene">
 		<div class="element-container fill" ppg-play="play" style="background-image:url('{{scene.background.src}}')">
 			<img ng-repeat="item in scene.items"
 				class="element"
@@ -70,6 +72,7 @@
 	<script src="/lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 	<script src="lib/pouchdb/dist/pouchdb.min.js"></script>
 	<script src="lib/pouchdb/dist/pouchdb.find.min.js"></script>
+	<script src="lib/html2canvas/build/html2canvas.min.js"></script>
 
 	<!-- Application scripts -->
 	<script src="/js/app.js"></script>

@@ -20,11 +20,11 @@ angular.module("ppgmaker").service("sceneService",function($q){
 			this.name = props.name || "";
 			this.frames = props.frames || 0;
 			this.background = props.background || "";
+			this.screenshot = props.screenshot || "";
 
 			if(!mini) {
 				this.items = props.items || [];
 				this.idfilm = props.idfilm || "";
-				this.screenshot = props.screenshot || "";
 			}
 		}
 
@@ -55,8 +55,8 @@ angular.module("ppgmaker").service("sceneService",function($q){
 		}
 
 		find(scene) {
-			let id = scene.id || scene;
-			return this.scenes.find(scn=>scn.id==id);
+			let id = scene._id || scene;
+			return this.scenes.find(scn=>scn._id==id);
 		}
 
 		add(scene) {
@@ -79,12 +79,12 @@ angular.module("ppgmaker").service("sceneService",function($q){
 		}
 
 		update(scene,save) {
-			return $q.
-				resolve(()=>{this.find(scene).extend(scene)}).
-				then(()=>{
-					if(save) return this.save();
-					else return this;
-				});
+			return $q(resolve=>{
+				resolve(this.find(scene).extend(scene,true))
+			}).then(()=>{
+				if(save) return this.save();
+				else return this;
+			});
 		}
 
 		save() {

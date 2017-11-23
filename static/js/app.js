@@ -1,9 +1,11 @@
 angular.module('ppgmaker', ['ui.bootstrap']).config(function() {
 	console.log("App started!");
-}).controller("MainController",function($scope,$interval,itemsService,sceneService){
+}).controller("MainController",function($scope,$element,$interval,$q,itemsService,sceneService){
 	var MAX = 5;
 	var MAX_TIME = 30000;
 	var recordTimeout = null;
+	var elemScene = $(".scene",$element).get(0);
+	var canvas = document.createElement("canvas");
 
 	$scope.addDisabled = false;
 	$scope.record = false;
@@ -34,6 +36,14 @@ angular.module('ppgmaker', ['ui.bootstrap']).config(function() {
 		});
 	}
 
+	function resizeImage(img) {
+		var ctx = canvas.getContext('2d');
+		canvas.height = 100;
+		canvas.width = img.width*canvas.height/img.height;
+		ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+		return canvas.toDataURL();
+	}
+
 	function resetBuffers() {
 		$scope.scene.items.forEach(item => {
 			item.buffer.splice(0,item.buffer.length);
@@ -54,8 +64,11 @@ angular.module('ppgmaker', ['ui.bootstrap']).config(function() {
 	function stopRecord() {
 		$scope.record = false;
 		$interval.cancel(recordTimeout);
-		$scope.scene.
-			save().
+
+		$q(res=>html2canvas(elemScene,{onrendered:res})).
+			then(canvas=>resizeImage(canvas)).
+			then(img=>$scope.scene.screenshot=img).
+			then(()=>$scope.scene.save()).
 			then(()=>$scope.film.update($scope.scene,true));
 	}
 
