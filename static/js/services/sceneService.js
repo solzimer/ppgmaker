@@ -1,4 +1,4 @@
-angular.module("ppgmaker").service("sceneService",function(){
+angular.module("ppgmaker").service("sceneService",function($q){
 	var self = this;
 	var filmCol, sceneCol;
 
@@ -10,6 +10,10 @@ angular.module("ppgmaker").service("sceneService",function(){
 
 	class Scene {
 		constructor(props,mini) {
+			this.extend(props,mini);
+		}
+
+		extend(props,mini) {
 			props = props || {};
 			this._id = props._id || "scene_"+Date.now();
 			this._rev = props._rev;
@@ -47,7 +51,12 @@ angular.module("ppgmaker").service("sceneService",function(){
 			this._id = props._id || "film_"+Date.now();
 			this._rev = props._rev;
 			this.name = props.name || "";
-			this.scenes = (props.scenes || []).map(scn=>(new Scene(scn)).mini());
+			this.scenes = (props.scenes || []).map(scn=>new Scene(scn,true));
+		}
+
+		find(scene) {
+			let id = scene.id || scene;
+			return this.scenes.find(scn=>scn.id==id);
 		}
 
 		add(scene) {
@@ -67,6 +76,15 @@ angular.module("ppgmaker").service("sceneService",function(){
 				this.scenes.splice(idx,1);
 				return this.save();
 			}).then(res=>scene);
+		}
+
+		update(scene,save) {
+			return $q.
+				resolve(()=>{this.find(scene).extend(scene)}).
+				then(()=>{
+					if(save) return this.save();
+					else return this;
+				});
 		}
 
 		save() {

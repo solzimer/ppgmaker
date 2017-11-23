@@ -54,6 +54,12 @@ angular.module('ppgmaker', ['ui.bootstrap']).config(function() {
 	function stopRecord() {
 		$scope.record = false;
 		$interval.cancel(recordTimeout);
+		$scope.scene.
+			save().
+			then(()=>$scope.film.update($scope.scene,true)).
+			then(()=>{
+				console.log("SAVED!");
+			});
 	}
 
 	$scope.newScene = function() {
@@ -87,6 +93,7 @@ angular.module('ppgmaker', ['ui.bootstrap']).config(function() {
 	}
 
 	$scope.backScene = function() {
+		$scope.play = -1;
 		$scope.scene = null;
 	}
 
