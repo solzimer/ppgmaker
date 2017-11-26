@@ -22,8 +22,7 @@ html, body {height: 100%}
 }
 
 .element {
-	height:20%;
-	width:auto;
+	width:100px;
 	top:50%;
 	display:block;
 	position:absolute;
@@ -40,4 +39,19 @@ html, body {height: 100%}
 
 .item.disabled {
 	filter:grayscale();
+}
+
+.kinetic-slider-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+}
+
+.kinetic-slider-content {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: 400px;
 }

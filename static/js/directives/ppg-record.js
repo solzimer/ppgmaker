@@ -40,7 +40,7 @@ angular.module('ppgmaker').directive("ppgRecord",function($interval,styleService
 		if(!buffer) buffer = [];
 
 		scope.$on("$destroy",function(){
-			delete elems[id];
+			delete items[id];
 		});
 
 		items[id] = {

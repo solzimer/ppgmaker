@@ -1,9 +1,24 @@
 {
+	"backgrounds" : {
+		"items" : [
+			{"id":"ppg_001", "src":"img/bg/bg001.jpg"},
+			{"id":"ppg_002", "src":"img/bg/bg002.jpg"},
+			{"id":"ppg_003", "src":"img/bg/bg003.jpg"},
+			{"id":"ppg_004", "src":"img/bg/bg004.png"},
+			{"id":"ppg_005", "src":"img/bg/bg005.jpg"},
+			{"id":"ppg_006", "src":"img/bg/bg006.jpg"}
+		]
+	},
 	"sections" : [
 		{
 			"id" : "powerpuff",
 			"order" : 0,
 			"items" :	[
+				{"id":"blossom001", "src":"/img/blossom/bls001.png","buffer":[]},
+				{"id":"blossom002", "src":"/img/blossom/bls002.png","buffer":[]},
+				{"id":"blossom003", "src":"/img/blossom/bls003.png","buffer":[]},
+				{"id":"blossom004", "src":"/img/blossom/bls004.png","buffer":[]},
+				{"id":"blossom005", "src":"/img/blossom/bls005.png","buffer":[]},
 				{"id":"bubbles001", "src":"/img/bubbles/bubbles001.png","buffer":[]},
 				{"id":"bubbles002", "src":"/img/bubbles/bubbles002.png","buffer":[]},
 				{"id":"bubbles003", "src":"/img/bubbles/bubbles003.png","buffer":[]},
@@ -20,8 +35,35 @@
 			]
 		},
 		{
-			"id" : "villains",
+			"id" : "teen titans",
 			"order" : 1,
+			"items" :	[
+				{"id":"rb001", "src":"/img/robin/robin001.png","buffer":[]},
+				{"id":"rb002", "src":"/img/robin/robin002.png","buffer":[]},
+				{"id":"rb003", "src":"/img/robin/robin003.png","buffer":[]},
+				{"id":"rb004", "src":"/img/robin/robin004.png","buffer":[]},
+				{"id":"sf001", "src":"/img/starfire/sf001.png","buffer":[]},
+				{"id":"sf002", "src":"/img/starfire/sf002.png","buffer":[]},
+				{"id":"sf003", "src":"/img/starfire/sf003.png","buffer":[]},
+				{"id":"sf004", "src":"/img/starfire/sf004.png","buffer":[]},
+				{"id":"sf005", "src":"/img/starfire/sf005.png","buffer":[]},
+				{"id":"bf001", "src":"/img/blackfire/bf001.png","buffer":[]},
+				{"id":"bf002", "src":"/img/blackfire/bf002.png","buffer":[]},
+				{"id":"bf003", "src":"/img/blackfire/bf003.png","buffer":[]},
+				{"id":"rv001", "src":"/img/raven/raven001.png","buffer":[]},
+				{"id":"rv002", "src":"/img/raven/raven002.png","buffer":[]},
+				{"id":"rv003", "src":"/img/raven/raven003.png","buffer":[]},
+				{"id":"rv004", "src":"/img/raven/raven004.png","buffer":[]},
+				{"id":"rv005", "src":"/img/raven/raven005.png","buffer":[]},
+				{"id":"rv006", "src":"/img/raven/raven006.png","buffer":[]},
+				{"id":"rv007", "src":"/img/raven/raven007.png","buffer":[]},
+				{"id":"rv008", "src":"/img/raven/raven008.png","buffer":[]},
+				{"id":"rv009", "src":"/img/raven/raven009.png","buffer":[]}
+			]
+		},
+		{
+			"id" : "villains",
+			"order" : 2,
 			"items" :	[]
 		}
 	]

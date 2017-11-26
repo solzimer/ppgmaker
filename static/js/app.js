@@ -79,6 +79,11 @@ angular.module('ppgmaker', ['ui.bootstrap']).config(function() {
 		});
 	}
 
+	$scope.setBackground = function(item) {
+		if(!$scope.addDisabled)
+			$scope.scene.background = item;
+	}
+
 	$scope.addItem = function(item) {
 		if(!$scope.addDisabled)
 			$scope.scene.items.push({src:item.src, buffer:[]});

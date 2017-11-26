@@ -37,7 +37,7 @@ angular.module('ppgmaker').directive("ppgEffects",function(styleService){
 		var id = "drag_"+(uid++);
 
 		scope.$on("$destroy",function(){
-			delete elems[id];
+			delete items[id];
 		});
 
 		items[id] = {
