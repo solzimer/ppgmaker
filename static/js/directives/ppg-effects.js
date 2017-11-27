@@ -25,7 +25,7 @@ angular.module('ppgmaker').directive("ppgEffects",function(styleService){
 			if(play<0) {
 				var elem = $(item.element.get(0));
 				var pos = elem.position();
-				pos.top += frames[frame]*10;
+				pos.top += frames[(frame+item.initial)%max]*10;
 				elem.css(pos);
 				styleService.set(elem,pos);
 			}
@@ -41,6 +41,7 @@ angular.module('ppgmaker').directive("ppgEffects",function(styleService){
 		});
 
 		items[id] = {
+			initial:Math.floor(Math.random()*max),
 			scope:scope,
 			element:element,
 		};
