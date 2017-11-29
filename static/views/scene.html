@@ -1,0 +1,59 @@
+<!-- Top buttons -->
+<div class="frame frame-top orange cover">
+	<div class="row">
+		<div class="col-sm-3 col-xs-3">
+			<button class="btn btn-primary" ng-click="home()"><i class="fa fa-home"></i></button>
+			<button class="btn btn-primary" ng-show="scene" ng-click="toggleRecord()"><i class="fa" ng-class="{'fa-circle':!record,'fa-pause':record}"></i></button>
+			<button class="btn btn-primary" ng-show="scene" ng-click="togglePlay()"><i class="fa" ng-class="{'fa-play':play<0,'fa-stop':play>=0}"></i></button>
+			<button class="btn btn-primary" ng-show="!scene" ng-click="newScene()"><i class="fa fa-plus"></i></button>
+		</div>
+		<div class="col-sm-8 col-xs-8" ng-show="!scene">
+			<a ng-repeat="scene in scenes" ng-click="selectScene(scene)">
+				<img src="{{scene.screenshot}}" alt="{{scene.name}}" style="height:34px"/>
+			</a>
+		</div>
+		<div class="col-sm-8 col-xs-8" ng-show="scene">
+			<uib-progressbar class="progress-striped active" value="time" type="success"></uib-progressbar>
+		</div>
+		<div class="col-sm-1 col-xs-1" ng-show="scene">
+			<button class="btn btn-primary pull-left" ng-click="backScene()"><i class="fa fa-reply"></i></button>
+		</div>
+	</div>
+</div>
+
+<!-- Item selector -->
+<uib-tabset active="active" class="frame frame-bottom pink">
+	<uib-tab index="-1" heading="Places">
+		<div style="padding:10px" ppg-carousel="allitems.backgrounds.items">
+			<img ng-repeat="bg in allitems.backgrounds.items"
+			class="item"
+			ng-src="{{bg.src}}"
+			style="margin-right:5px"
+			ng-click="setBackground(bg)"/>
+		</div>
+	</uib-tab>
+	<uib-tab ng-repeat="section in allitems.sections" index="$index">
+		<uib-tab-heading>{{section.id}}</uib-tab-heading>
+		<div style="padding:10px" ppg-carousel="section.items">
+			<img ng-repeat="item in section.items"
+			class="item"
+			ng-class="{disabled:addDisabled}"
+			ng-src="{{item.src}}"
+			style="margin-right:5px"
+			ng-click="addItem(item)"/>
+		</div>
+	</uib-tab>
+</uib-tabset>
+
+<!-- Scene -->
+<div class="fill scene">
+	<div class="element-container fill" ppg-play="play" style="background-image:url('{{scene.background.src}}')">
+		<img ng-repeat="item in scene.items"
+			class="element"
+			ppg-draggable
+			ppg-record="item.buffer"
+			ppg-effects="item.effects"
+			record="record" play="play"
+			ng-src="{{item.src}}" />
+	</div>
+</div>

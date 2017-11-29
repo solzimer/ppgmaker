@@ -25,6 +25,7 @@
     "angular-bootstrap": "^2.5.0",
     "pouchdb": "^6.3.4",
     "html2canvas": "^0.4.1",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "angular-ui-router": "^1.0.11"
   }
 }
