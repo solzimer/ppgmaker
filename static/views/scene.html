@@ -38,7 +38,7 @@
 			<img ng-repeat="item in section.items"
 			class="item"
 			ng-class="{disabled:addDisabled}"
-			ng-src="{{item.src}}"
+			ng-src="{{item | imgsrc:'sm'}}"
 			style="margin-right:5px"
 			ng-click="addItem(item)"/>
 		</div>
@@ -54,6 +54,6 @@
 			ppg-record="item.buffer"
 			ppg-effects="item.effects"
 			record="record" play="play"
-			ng-src="{{item.src}}" />
+			ng-src="{{item | imgsrc:'xl'}}" />
 	</div>
 </div>

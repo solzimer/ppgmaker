@@ -79,13 +79,15 @@ controller("SceneController",function($scope,$element,$interval,$q,itemsService,
 	}
 
 	$scope.setBackground = function(item) {
-		if(!$scope.addDisabled)
+		if(!$scope.record)
 			$scope.scene.background = item;
 	}
 
 	$scope.addItem = function(item) {
-		if(!$scope.addDisabled)
-			$scope.scene.items.push({src:item.src, buffer:[]});
+		if(!$scope.addDisabled) {
+			item = JSON.parse(JSON.stringify(item));
+			$scope.scene.items.push(item);
+		}
 	}
 
 	$scope.toggleRecord = function() {

@@ -1,4 +1,5 @@
 const
+	program = require('commander'),
 	cluster = require('cluster'),
 	os = require("os"),
 	extend = require("extend");
@@ -9,8 +10,6 @@ const DEF_CONF = {
 	port : 3000,
 	context : ""
 }
-
-var options = extend({},DEF_CONF);
 
 if(cluster.isMaster) {
 	if(isNaN(options.workers) || options.workers<=0) {

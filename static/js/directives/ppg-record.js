@@ -38,7 +38,8 @@ angular.module('ppgmaker').directive("ppgRecord",function($interval,styleService
 		var buffer = scope.$eval(attrs.ppgRecord);
 
 		if(!buffer) buffer = [];
-		$(element).css(buffer[0]);
+		if(buffer.length)
+			$(element).css(buffer[0]);
 
 		scope.$on("$destroy",function(){
 			delete items[id];
