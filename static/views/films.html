@@ -1,0 +1,10 @@
+<ul>
+	<li ng-repeat="film in films">
+		<a href="#" ui-sref="scene({id:film._id})">{{film.name}}<a>
+		<ol>
+			<li ng-repeat="scene in film.scenes">
+				<img ng-src="{{scene.screenshot}}" width="100"/>
+			</li>
+		</ol>
+	</li>
+</ul>

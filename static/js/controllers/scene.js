@@ -1,5 +1,5 @@
 angular.module('ppgmaker').
-controller("SceneController",function($scope,$element,$interval,$q,itemsService,sceneService){
+controller("SceneController",function($scope,$stateParams,$element,$interval,$q,itemsService,sceneService){
 	var MAX = 5;
 	var MAX_TIME = 30000;
 	var recordTimeout = null;
@@ -23,7 +23,7 @@ controller("SceneController",function($scope,$element,$interval,$q,itemsService,
 			$scope.addDisabled = !items || items.length>=MAX;
 		});
 
-		sceneService.findFilm({name:"testppg"}).then(film=>{
+		sceneService.findFilm({_id:$stateParams.id}).then(film=>{
 			if(!film) return sceneService.newFilm({name:"testppg"}).save();
 			else return film;
 		}).then(film=>{

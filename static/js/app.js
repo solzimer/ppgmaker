@@ -4,14 +4,20 @@ angular.module('ppgmaker', ['ui.bootstrap','ui.router']).config(function($stateP
 	  template: '<h3>hello world!</h3>'
 	});
 
+	$stateProvider.state("films",{
+		url: '/films',
+		controller : 'FilmsController',
+	  templateUrl: '/views/films.html'
+	});
+
   $stateProvider.state("scene",{
-		url: '/scene',
+		url: '/scene/:id',
 		controller : 'SceneController',
 	  templateUrl: '/views/scene.html'
 	});
 
-	$urlRouterProvider.otherwise("/scene");
-	
+	$urlRouterProvider.otherwise("/films");
+
 	console.log("App started!");
 
 });

@@ -11,6 +11,8 @@ const DEF_CONF = {
 	context : ""
 }
 
+let options = extend({},DEF_CONF);
+
 if(cluster.isMaster) {
 	if(isNaN(options.workers) || options.workers<=0) {
 		os.cpus().forEach(()=>cluster.fork());

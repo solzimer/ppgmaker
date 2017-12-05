@@ -109,6 +109,14 @@ angular.module("ppgmaker").service("sceneService",function($q){
 		return new Film(film);
 	}
 
+	this.allFilms = function() {
+		return filmCol.
+			allDocs({include_docs: true}).
+			then(list=>list.rows.map(elem=>elem.doc)).
+			then(docs=>docs.filter(doc=>doc.name)).
+			then(docs=>docs.map(doc=>new Film(doc)));
+	}
+
 	this.getFilm = function(id) {
 		return filmCol.get(id).then(film=>new Film(film));
 	}
