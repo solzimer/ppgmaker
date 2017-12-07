@@ -68,7 +68,8 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 			then(canvas=>resizeImage(canvas)).
 			then(img=>$scope.scene.screenshot=img).
 			then(()=>$scope.scene.save()).
-			then(()=>$scope.film.update($scope.scene,true));
+			then(()=>$scope.film.update($scope.scene,true)).
+			then(()=>$scope.$apply());
 	}
 
 	$scope.newScene = function() {

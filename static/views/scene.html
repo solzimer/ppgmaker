@@ -2,10 +2,10 @@
 <div class="frame frame-top orange cover">
 	<div class="row">
 		<div class="col-sm-3 col-xs-3">
-			<button class="btn btn-primary" ng-click="home()"><i class="fa fa-home"></i></button>
-			<button class="btn btn-primary" ng-show="scene" ng-click="toggleRecord()"><i class="fa" ng-class="{'fa-circle':!record,'fa-pause':record}"></i></button>
-			<button class="btn btn-primary" ng-show="scene" ng-click="togglePlay()"><i class="fa" ng-class="{'fa-play':play<0,'fa-stop':play>=0}"></i></button>
-			<button class="btn btn-primary" ng-show="!scene" ng-click="newScene()"><i class="fa fa-plus"></i></button>
+			<a class="action" ui-sref="films()"><i class="fa fa-home"></i></a>
+			<a class="action danger" ng-show="scene" ng-click="toggleRecord()"><i class="fa" ng-class="{'fa-circle':!record,'fa-pause':record}"></i></a>
+			<a class="action" ng-show="scene" ng-click="togglePlay()"><i class="fa" ng-class="{'fa-play':play<0,'fa-stop':play>=0}"></i></a>
+			<a class="action" ng-show="!scene" ng-click="newScene()"><i class="fa fa-plus"></i></a>
 		</div>
 		<div class="col-sm-8 col-xs-8" ng-show="!scene">
 			<a ng-repeat="scene in scenes" ng-click="selectScene(scene)">
@@ -16,7 +16,7 @@
 			<uib-progressbar class="progress-striped active" value="time" type="success"></uib-progressbar>
 		</div>
 		<div class="col-sm-1 col-xs-1" ng-show="scene">
-			<button class="btn btn-primary pull-left" ng-click="backScene()"><i class="fa fa-reply"></i></button>
+			<a class="action" ng-click="backScene()"><i class="fa fa-reply"></i></a>
 		</div>
 	</div>
 </div>
@@ -51,6 +51,7 @@
 		<img ng-repeat="item in scene.items"
 			class="element"
 			ppg-draggable
+			ppg-flip
 			ppg-record="item.buffer"
 			ppg-effects="item.effects"
 			record="record" play="play"

@@ -1,10 +1,16 @@
 <ul>
+	<li><a href="#">New Film...</a></li>
+</ul>
+
+<ul class="film-list">
 	<li ng-repeat="film in films">
-		<a href="#" ui-sref="scene({id:film._id})">{{film.name}}<a>
-		<ol>
-			<li ng-repeat="scene in film.scenes">
-				<img ng-src="{{scene.screenshot}}" width="100"/>
-			</li>
-		</ol>
+		<h3><a href="#" ui-sref="scene({id:film._id})">{{film.name}}<a></h3>
+		<div ppg-carousel="film.scenes">
+			<img ng-repeat="scene in film.scenes"
+				class="item"
+				ui-sref="scene({id:film._id})"
+				ng-src="{{scene.screenshot}}"
+				style="margin-right:5px;height:100px"/>
+		</div>
 	</li>
 </ul>

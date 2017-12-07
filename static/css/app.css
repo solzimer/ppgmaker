@@ -1,6 +1,21 @@
+@font-face {
+  font-family: 'Powerpuff';
+  src: url('../fonts/powerpuff.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
 [ng-cloak] { display: none; }
 
-html, body {height: 100%}
+html, body {
+	font-family: 'Powerpuff';
+	height: 100%;
+}
+
+body {
+	background: url('/img/web/bg-home001.jpg') center bottom no-repeat;
+	background-size: 100% auto;
+}
 
 .fill {
 	height: 100%;
@@ -8,6 +23,30 @@ html, body {height: 100%}
 
 .cover {
 	width: 100%;
+}
+
+.flip {
+	transform: scaleX(-1) !important;
+}
+
+.film-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	margin-left: 100px;
+}
+
+a.action {
+	font-size: 2em;
+	color:#FFF;
+	margin-left: 10px;
+	cursor: pointer;
+}
+.progress {
+	height:30px;
+	padding: 0;
+	margin: 0;
+	margin-top: 3px;
 }
 
 .element-container {

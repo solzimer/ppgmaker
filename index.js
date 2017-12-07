@@ -38,6 +38,7 @@ else {
 	app.use(cors());
 	app.use('/',express.static('static'));
 	app.use('/lib',express.static('bower_components'));
+	app.use('/bower_components',express.static('bower_components'));
 	app.listen(options.port, () => {
 		console.log(`Worker ${process.pid} started`);
 	});
