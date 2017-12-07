@@ -33,6 +33,25 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 		}).catch(err=>{
 			console.error(err);
 		});
+
+		setupBars();
+	}
+
+	function setupBars() {
+		let mc = new Hammer($element[0]);
+		mc.on("tap",evt=>{
+			let frame = $(evt.target).closest(".frame-bottom");
+			if(frame.length) {
+				if(frame.is(".hide-down"))
+					frame.removeClass("hide-down");
+			}
+			else {
+				$(".frame-bottom",$element).each((i,el)=>{
+					if(!$(el).is((".hide-down")))
+						$(el).addClass("hide-down");
+				});
+			}
+		});		
 	}
 
 	function resizeImage(img) {

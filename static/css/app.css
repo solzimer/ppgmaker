@@ -41,6 +41,11 @@ html, body {height: 100%}
 	filter:grayscale();
 }
 
+.progress-big {
+	margin-bottom: 0;
+	height:34px;
+}
+
 .kinetic-slider-container {
   position: relative;
   z-index: 1;
