@@ -1,7 +1,7 @@
 .frame.frame-top {
 	border-radius: 0 0 15px 15px;	padding: 15px 54px 30px 30px;
 	border:none; position:fixed; z-index:1000;
-	width:90%; left:5%;	top:0;
+	width:90%; left:5%;	top:0; height:80px;
 }
 .frame.frame-top:after {
   content: ""; display: block;
@@ -13,13 +13,23 @@
 .frame.frame-bottom {
 	border-radius: 15px 15px 0 0;	padding: 15px 10px 30px 30px;
 	border:none; position:fixed; z-index:1000;
-	width:90%; left:5%;	bottom:0;	height:100px;
+	width:90%; left:5%;	bottom:0;	height:93px;
 }
 .frame.frame-bottom:after {
 	content: "";  display: block;
 	position: absolute;	left:15px;bottom:0;
 	border-radius: 15px 15px 0 0;	z-index:-1;
 	width: calc(100% - 30px);	height: calc(100% - 15px);
+}
+.frame.frame-bottom.hide-down {
+	animation-name: hide-down;
+  animation-duration: 1s;
+	animation-fill-mode: forwards;
+}
+
+@keyframes hide-down {
+	from {bottom:0;}
+	to {bottom:-93px;}
 }
 
 .frame.pink {background-color: #b9247d;}
