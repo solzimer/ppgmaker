@@ -7,10 +7,14 @@
 			<a class="action" ng-show="scene" ng-click="togglePlay()"><i class="fa" ng-class="{'fa-play':play<0,'fa-stop':play>=0}"></i></a>
 			<a class="action" ng-show="!scene" ng-click="newScene()"><i class="fa fa-plus"></i></a>
 		</div>
-		<div class="col-sm-8 col-xs-8" ng-show="!scene">
-			<a ng-repeat="scene in scenes" ng-click="selectScene(scene)">
-				<img src="{{scene.screenshot}}" alt="{{scene.name}}" style="height:34px"/>
-			</a>
+		<div class="col-sm-8 col-xs-8" ng-show="!scene" style="overflow:hidden">
+			<div ppg-carousel="scenes" style="display:inline-block">
+				<img ng-repeat="scene in scenes"
+				ng-src="{{scene.screenshot}}"
+				alt="{{scene.name}}"
+				style="margin-right:5px;height:34px"
+				ng-click="selectScene(scene)"/>
+			</div>
 		</div>
 		<div class="col-sm-8 col-xs-8" ng-show="scene">
 			<uib-progressbar class="progress-bar-danger progress-big active" value="time" type="success"></uib-progressbar>

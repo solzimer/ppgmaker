@@ -71,6 +71,25 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 		}).catch(err=>{
 			console.error(err);
 		});
+
+		setupBars();
+	}
+
+	function setupBars() {
+		let mc = new Hammer($element[0]);
+		mc.on("tap",evt=>{
+			let frame = $(evt.target).closest(".frame-bottom");
+			if(frame.length) {
+				if(frame.is(".hide-down"))
+					frame.removeClass("hide-down");
+			}
+			else {
+				$(".frame-bottom",$element).each((i,el)=>{
+					if(!$(el).is((".hide-down")))
+						$(el).addClass("hide-down");
+				});
+			}
+		});
 	}
 
 	function resizeImage(img) {
@@ -107,7 +126,8 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 			then(img=>$scope.scene.screenshot=img).
 			then(()=>$scope.scene.save()).
 			then(()=>$scope.film.update($scope.scene,true)).
-			then(()=>$scope.$apply());
+			then(()=>$scope.$apply()).
+			catch(err=>console.log(err.message));
 	}
 
 	$scope.newScene = function() {
@@ -273,15 +293,16 @@ angular.module('ppgmaker').directive("ppgEffects",function(styleService){
 });
 
 angular.module('ppgmaker').directive("ppgFlip",function(styleService) {
+	const CLASS = "ppg-flip-style";
 
 	function handleTap(ev) {
 		var elem = $(ev.target);
-		elem.toggleClass("flip");
+		elem.toggleClass(CLASS);
 
-		setTimeout(()=>{
-			let flip = elem.css("transform");
-			styleService.set(elem,{transform:flip});
-		},200);
+		let flip = elem.is(`.${CLASS}`)? "scaleX(-1)" : "none";
+		let tr = {transform:flip};
+		styleService.set(elem,tr);
+		elem.css(tr);
 	}
 
 	function link(scope,elem,attrs) {

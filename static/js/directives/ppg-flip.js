@@ -1,13 +1,14 @@
 angular.module('ppgmaker').directive("ppgFlip",function(styleService) {
+	const CLASS = "ppg-flip-style";
 
 	function handleTap(ev) {
 		var elem = $(ev.target);
-		elem.toggleClass("flip");
+		elem.toggleClass(CLASS);
 
-		setTimeout(()=>{
-			let flip = elem.css("transform");
-			styleService.set(elem,{transform:flip});
-		},200);
+		let flip = elem.is(`.${CLASS}`)? "scaleX(-1)" : "none";
+		let tr = {transform:flip};
+		styleService.set(elem,tr);
+		elem.css(tr);
 	}
 
 	function link(scope,elem,attrs) {

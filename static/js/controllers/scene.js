@@ -51,7 +51,7 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 						$(el).addClass("hide-down");
 				});
 			}
-		});		
+		});
 	}
 
 	function resizeImage(img) {
@@ -88,7 +88,8 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 			then(img=>$scope.scene.screenshot=img).
 			then(()=>$scope.scene.save()).
 			then(()=>$scope.film.update($scope.scene,true)).
-			then(()=>$scope.$apply());
+			then(()=>$scope.$apply()).
+			catch(err=>console.log(err.message));
 	}
 
 	$scope.newScene = function() {
