@@ -1,4 +1,4 @@
-angular.module('ppgmaker').directive("ppgCarousel",function($interval,styleService){
+angular.module('ppgmaker').directive("ppgCarousel",function($timeout,styleService){
 	var uid = 0;
 
 	function link(scope, element, attrs) {
@@ -6,12 +6,15 @@ angular.module('ppgmaker').directive("ppgCarousel",function($interval,styleServi
 			return scope.$eval(element.attr("ppg-carousel"));
 		},items=>{
 			if(items && items.length) {
-				$(element).slick({
-					mobileFirst : true,
-					arrows: false,
-					slidesToScroll: 5,
-					variableWidth: true
-				});
+				$timeout(()=>{
+					$(element).slick({
+						mobileFirst : true,
+						arrows: false,
+						slidesToScroll: 5,
+						variableWidth: true,
+						infinite: false
+					});
+				},10);
 			}
 		});
 

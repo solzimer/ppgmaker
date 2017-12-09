@@ -1,27 +1,31 @@
 <!-- Top buttons -->
 <div class="frame frame-top orange cover">
 	<div class="row">
-		<div class="col-sm-3 col-xs-3">
-			<a class="action" ui-sref="films()"><i class="fa fa-home"></i></a>
-			<a class="action danger" ng-show="scene" ng-click="toggleRecord()"><i class="fa" ng-class="{'fa-circle':!record,'fa-pause':record}"></i></a>
-			<a class="action" ng-show="scene" ng-click="togglePlay()"><i class="fa" ng-class="{'fa-play':play<0,'fa-stop':play>=0}"></i></a>
-			<a class="action" ng-show="!scene" ng-click="newScene()"><i class="fa fa-plus"></i></a>
-		</div>
-		<div class="col-sm-8 col-xs-8" ng-show="!scene" style="overflow:hidden">
-			<div ppg-carousel="scenes" style="display:inline-block">
-				<img ng-repeat="scene in scenes"
-				ng-src="{{scene.screenshot}}"
-				alt="{{scene.name}}"
-				style="margin-right:5px;height:34px"
-				ng-click="selectScene(scene)"/>
+		<form class="form-inline">
+			<div class="form-group">
+				<a class="action" ui-sref="films()"><i class="fa fa-home"></i></a>
+				<a class="action danger" ng-show="scene" ng-click="toggleRecord()"><i class="fa" ng-class="{'fa-circle':!record,'fa-pause':record}"></i></a>
+				<a class="action" ng-show="scene" ng-click="togglePlay()"><i class="fa" ng-class="{'fa-play':play<0,'fa-stop':play>=0}"></i></a>
 			</div>
-		</div>
-		<div class="col-sm-8 col-xs-8" ng-show="scene">
-			<uib-progressbar class="progress-bar-danger progress-big active" value="time" type="success"></uib-progressbar>
-		</div>
-		<div class="col-sm-1 col-xs-1" ng-show="scene">
-			<a class="action" ng-click="backScene()"><i class="fa fa-reply"></i></a>
-		</div>
+			<div class="form-group" ng-show="scene">
+				<uib-progressbar style="width:300px" class="progress-bar-danger progress-big active" value="time" type="success"></uib-progressbar>
+			</div>
+			<div class="form-group" ng-show="scene">
+				<a class="action" ng-click="backScene()"><i class="fa fa-reply"></i></a>
+			</div>
+			<div class="form-group" ng-show="!scene">
+				<a class="action" ng-click="newScene()"><i class="fa fa-plus"></i></a>
+			</div>
+			<div class="form-group" ng-show="!scene" style="width:50%">
+				<div ng-if="film.scenes.length && !scene" ppg-carousel="film.scenes">
+					<img ng-repeat="scene in film.scenes track by scene._id"
+					ng-src="{{scene.screenshot||'/img/web/scene001.jpg'}}"
+					alt="{{scene.name}}"
+					style="margin-right:5px;height:34px"
+					ng-click="selectScene(scene)"/>
+				</div>
+			</div>
+		</form>
 	</div>
 </div>
 

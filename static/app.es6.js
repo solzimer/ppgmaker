@@ -1,4 +1,5 @@
-angular.module('ppgmaker', ['ui.bootstrap','ui.router']).config(function($stateProvider,$urlRouterProvider) {
+angular.module('ppgmaker', ['ui.bootstrap','ui.router']).
+config(function($stateProvider,$urlRouterProvider) {
   $stateProvider.state("home",{
 		url: '/home',
 	  template: '<h3>hello world!</h3>'
@@ -49,7 +50,7 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 	$scope.play = -1;
 	$scope.time = 0;
 	$scope.scenes = [];
-	$scope.scene = null
+	$scope.scene = null;
 
 	function init() {
 		itemsService.get().then(items=>{
@@ -175,7 +176,7 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 	init();
 });
 
-angular.module('ppgmaker').directive("ppgCarousel",function($interval,styleService){
+angular.module('ppgmaker').directive("ppgCarousel",function($timeout,styleService){
 	var uid = 0;
 
 	function link(scope, element, attrs) {
@@ -183,12 +184,15 @@ angular.module('ppgmaker').directive("ppgCarousel",function($interval,styleServi
 			return scope.$eval(element.attr("ppg-carousel"));
 		},items=>{
 			if(items && items.length) {
-				$(element).slick({
-					mobileFirst : true,
-					arrows: false,
-					slidesToScroll: 5,
-					variableWidth: true
-				});
+				$timeout(()=>{
+					$(element).slick({
+						mobileFirst : true,
+						arrows: false,
+						slidesToScroll: 5,
+						variableWidth: true,
+						infinite: false
+					});
+				},10);
 			}
 		});
 

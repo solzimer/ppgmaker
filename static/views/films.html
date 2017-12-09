@@ -9,7 +9,7 @@
 			<img ng-repeat="scene in film.scenes"
 				class="item"
 				ui-sref="scene({id:film._id})"
-				ng-src="{{scene.screenshot}}"
+				ng-src="{{scene.screenshot||'/img/web/scene001.jpg'}}"
 				style="margin-right:5px;height:100px"/>
 		</div>
 	</li>

@@ -1,4 +1,5 @@
-angular.module('ppgmaker', ['ui.bootstrap','ui.router']).config(function($stateProvider,$urlRouterProvider) {
+angular.module('ppgmaker', ['ui.bootstrap','ui.router']).
+config(function($stateProvider,$urlRouterProvider) {
   $stateProvider.state("home",{
 		url: '/home',
 	  template: '<h3>hello world!</h3>'

@@ -11,7 +11,7 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 	$scope.play = -1;
 	$scope.time = 0;
 	$scope.scenes = [];
-	$scope.scene = null
+	$scope.scene = null;
 
 	function init() {
 		itemsService.get().then(items=>{
