@@ -8,29 +8,26 @@ module.exports = function(grunt) {
 	// Project configuration.
 	grunt.initConfig({
 	  pkg: grunt.file.readJSON('package.json'),
-		browserify: {
-			dist: {
-				watch: true,
-				keepAlive: true,
-				files: {
-					'static/ppgmaker.js': []
-				}
-			}
-		},
 		concat: {
 			options: {
 				sourceMap: true,
-				sourceMapName : 'static/app.es6.js.map',
+				sourceMapName : 'static/js/app.es6.js.map',
+				sourceMapRootpath : '/js',
 			},
-			js: {
-				src: ['static/js/**/*.js'],
-				dest: 'static/app.es6.js'
-			}
+			app : {
+				src: ['static/src/**/*.js'],
+				dest: 'static/js/app.es6.js'
+			},
+			css : {
+				src: ['static/css/**/*.js','!static/css/all.css'],
+				dest: 'static/css/all.css'
+			},
 		},
 		babel: {
 			options: {
-				sourceMap: 'true',
-				//inputSourceMap: grunt.file.readJSON('static/app.es6.js.map'),
+				sourceMap: true,
+				sourceMapName : 'static/js/app.js.map',
+				sourceMapUrl : '/js/app.js.map',
 				presets: ['es2015']
 			},
 			dist: {
@@ -39,16 +36,25 @@ module.exports = function(grunt) {
 				}
 			}
 		},
+		copy : {
+			native : {
+				files : [
+					{src:'static/js/app.es6.js', dest:'native/www/js/app.es6.js'},
+					{src:'static/js/ext.min.js', dest:'native/www/js/ext.min.js'},
+					{src:'static/css/all.css', dest:'native/www/css/all.css'},
+				]
+			}
+		},
 	  uglify: {
 	    options: {
 	      banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
 				sourceMap : true,
-				sourceMapName : 'static/ext.min.js.map',
+				sourceMapName : 'static/js/ext.min.js.map',
 				sourceMapRoot: '/',
 	    },
 			build: {
 				files : {
-					'static/ext.min.js' : [
+					'static/js/ext.min.js' : [
 						`${LIB}/TouchEmulator/touch-emulator.js`,
 						`${LIB}/jquery/dist/jquery.js`,
 						`${LIB}/hammerjs/hammer.js`,
@@ -65,16 +71,23 @@ module.exports = function(grunt) {
     	}
 	  },
 		watch: {
-			scripts: {
-				files: ['static/js/**/*.js'],
-				tasks: ['concat'],
+			app: {
+				files: ['static/src/**/*.js'],
+				tasks: ['concat:app'],
 				options: {
 					spawn: false,
 				},
 			},
+			native: {
+				files: [
+					'static/js/app.es6.js',
+					'static/js/ext.min.js'
+				],
+				tasks: ['copy:native']
+			}
 		},
 		clean: []
 	});
 
-	grunt.registerTask('default', ['concat'/*,'babel'*/,'uglify']);
+	grunt.registerTask('default', ['concat','uglify','copy']);
 };
