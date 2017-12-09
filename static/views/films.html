@@ -5,12 +5,10 @@
 <ul class="film-list">
 	<li ng-repeat="film in films">
 		<h3><a href="#" ui-sref="scene({id:film._id})">{{film.name}}<a></h3>
-		<div ppg-carousel="film.scenes">
+		<div class="film-scenes" ppg-carousel="film.scenes">
 			<img ng-repeat="scene in film.scenes"
-				class="item"
 				ui-sref="scene({id:film._id})"
-				ng-src="{{scene.screenshot||'/img/web/scene001.jpg'}}"
-				style="margin-right:5px;height:100px"/>
+				ng-src="{{scene.screenshot||'/img/web/scene001.jpg'}}"/>
 		</div>
 	</li>
 </ul>

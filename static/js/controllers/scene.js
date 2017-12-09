@@ -10,7 +10,7 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 	$scope.record = false;
 	$scope.play = -1;
 	$scope.time = 0;
-	$scope.scenes = [];
+	$scope.film = null;
 	$scope.scene = null;
 
 	function init() {
@@ -28,8 +28,6 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 			else return film;
 		}).then(film=>{
 			$scope.film = film;
-			$scope.scenes = film.scenes;
-			$scope.$apply();
 		}).catch(err=>{
 			console.error(err);
 		});
@@ -83,20 +81,17 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 		$scope.record = false;
 		$interval.cancel(recordTimeout);
 
-		$q(res=>html2canvas(elemScene,{onrendered:res})).
+		return $q(res=>html2canvas(elemScene,{onrendered:res})).
 			then(canvas=>resizeImage(canvas)).
 			then(img=>$scope.scene.screenshot=img).
 			then(()=>$scope.scene.save()).
 			then(()=>$scope.film.update($scope.scene,true)).
-			then(()=>$scope.$apply()).
 			catch(err=>console.log(err.message));
 	}
 
 	$scope.newScene = function() {
-		$scope.film.add({name:"New Scene"}).then(scene=>{
-			$scope.scene = scene;
-			$scope.$apply();
-		});
+		$scope.film.add({name:"New Scene"}).
+			then(scene=>$scope.scene = scene);
 	}
 
 	$scope.setBackground = function(item) {
@@ -123,15 +118,14 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 	}
 
 	$scope.selectScene = function(scene) {
-		scene.fetch().then(res=>{
-			$scope.scene = res;
-			$scope.$apply();
-		});
+		scene.fetch().then(res=>$scope.scene = res);
 	}
 
 	$scope.backScene = function() {
-		$scope.play = -1;
-		$scope.scene = null;
+		stopRecord().then(()=>{
+			$scope.play = -1;
+			$scope.scene = null;
+		});
 	}
 
 	init();

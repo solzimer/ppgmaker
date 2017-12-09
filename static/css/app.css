@@ -32,6 +32,18 @@ body {
 	margin-left: 100px;
 }
 
+.film-list .film-scenes {
+    padding: 0px;
+    border-width: 10px 0px 10px 10px;
+    border-color: #faaecd;
+    border-style: solid;
+    height:120px;
+}
+
+.film-list .film-scenes img {
+  height:100px;
+}
+
 a.action {
 	font-size: 2em;
 	color:#FFF;

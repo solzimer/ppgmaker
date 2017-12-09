@@ -5,9 +5,8 @@ controller("FilmsController",function($scope,$element,$interval,$q,sceneService)
 	function init() {
 		sceneService.allFilms().then(films=>{
 			$scope.films = films;
-			$scope.$apply();
 		});
 	}
-	
+
 	init();
 });
