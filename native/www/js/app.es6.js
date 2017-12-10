@@ -8,13 +8,13 @@ config(function($stateProvider,$urlRouterProvider) {
 	$stateProvider.state("films",{
 		url: '/films',
 		controller : 'FilmsController',
-	  templateUrl: '/views/films.html'
+	  templateUrl: 'views/films.html'
 	});
 
   $stateProvider.state("scene",{
 		url: '/scene/:id',
 		controller : 'SceneController',
-	  templateUrl: '/views/scene.html'
+	  templateUrl: 'views/scene.html'
 	});
 
 	$urlRouterProvider.otherwise("/films");
@@ -33,7 +33,7 @@ controller("FilmsController",function($scope,$element,$interval,$q,sceneService)
 		});
 	}
 
-	init();
+	init(true);
 });
 
 angular.module('ppgmaker').
@@ -487,7 +487,7 @@ angular.module("ppgmaker").service("itemsService",function($http){
 	this.get = function() {
 		if(!prModel) {
 			prModel = $http.
-				get("/data/allitems.json").
+				get("data/allitems.json").
 				then(function(res){
 					angular.extend(self.model,res.data);
 					return self.model;

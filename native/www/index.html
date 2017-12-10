@@ -32,18 +32,32 @@
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-        <link rel="stylesheet" type="text/css" href="css/index.css">
-        <title>Hello World</title>
+        <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="lib/angular-bootstrap/ui-bootstrap-csp.css">
+        <link rel="stylesheet" href="lib/slick-carousel/slick/slick.css">
+        <link rel="stylesheet" href="lib/slick-carousel/slick/slick-theme.css">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="css/app.css">
+        <link rel="stylesheet" href="css/frames.css">
+        <title>Powerpuff Girls Maker</title>
     </head>
-    <body>
-        <div class="app">
-            <h1>Apache Cordova</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-            </div>
-        </div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
+    <body ng-app="ppgmaker">
+    	<ui-view></ui-view>
+
+    	<!-- Core scripts -->
+      <script type="text/javascript" src="cordova.js"></script>
+      <script type="text/javascript" src="js/index.js"></script>
+    	<script type="text/javascript" src="js/ext.min.js"></script>
+    	<script type="text/javascript">TouchEmulator();</script>
+
+    	<!-- Application scripts -->
+    	<script type="text/javascript" src="js/app.es6.js"></script>
+
+    	<script type="text/javascript">
+    		// Disable scrolling.
+    		document.body.ontouchmove = function (e) {
+    		  e.preventDefault();
+    		}
+    	</script>
     </body>
 </html>

@@ -7,7 +7,7 @@ angular.module("ppgmaker").service("itemsService",function($http){
 	this.get = function() {
 		if(!prModel) {
 			prModel = $http.
-				get("/data/allitems.json").
+				get("data/allitems.json").
 				then(function(res){
 					angular.extend(self.model,res.data);
 					return self.model;

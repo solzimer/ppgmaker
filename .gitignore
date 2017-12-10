@@ -18,3 +18,11 @@ coverage
 node_modules
 npm-debug.log
 bower_components
+native/platforms
+native/www/data
+native/www/img/*
+native/www/css/*
+native/www/fonts/*
+native/www/lib/*
+native/www/views/*
+native/www/js/*

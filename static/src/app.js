@@ -8,13 +8,13 @@ config(function($stateProvider,$urlRouterProvider) {
 	$stateProvider.state("films",{
 		url: '/films',
 		controller : 'FilmsController',
-	  templateUrl: '/views/films.html'
+	  templateUrl: 'views/films.html'
 	});
 
   $stateProvider.state("scene",{
 		url: '/scene/:id',
 		controller : 'SceneController',
-	  templateUrl: '/views/scene.html'
+	  templateUrl: 'views/scene.html'
 	});
 
 	$urlRouterProvider.otherwise("/films");

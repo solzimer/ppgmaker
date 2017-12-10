@@ -13,7 +13,7 @@ html, body {
 }
 
 body {
-	background: url('/img/web/bg-home001.jpg') center bottom no-repeat;
+	background: url('img/web/bg-home001.jpg') center bottom no-repeat;
 	background-size: 100% auto;
 }
 

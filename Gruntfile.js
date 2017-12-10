@@ -37,11 +37,20 @@ module.exports = function(grunt) {
 			}
 		},
 		copy : {
-			native : {
+			srcnative : {
 				files : [
-					{src:'static/js/app.es6.js', dest:'native/www/js/app.es6.js'},
-					{src:'static/js/ext.min.js', dest:'native/www/js/ext.min.js'},
-					{src:'static/css/all.css', dest:'native/www/css/all.css'},
+					{expand: true, cwd: 'static/js', src: '*.js', dest: 'native/www/js/'},
+					{expand: true, cwd: 'static/views', src: '*.html', dest: 'native/www/views/'},
+					{expand: true, cwd: 'static/css', src: '*.css', dest: 'native/www/css/'},
+					{expand: true, cwd: 'static/fonts', src: '*', dest: 'native/www/fonts/'},
+					{expand: true, cwd: 'static/data', src: '*', dest: 'native/www/data/'},
+					{expand: true, cwd: 'bower_components', src: "**/*.css", dest: 'native/www/lib/'}
+				]
+			},
+			imgnative : {
+				files : [
+					{expand: true, cwd: 'static/img', src: '**/*.png', dest: 'native/www/img/'},
+					{expand: true, cwd: 'static/img', src: '**/*.jpg', dest: 'native/www/img/'},
 				]
 			}
 		},
@@ -81,9 +90,10 @@ module.exports = function(grunt) {
 			native: {
 				files: [
 					'static/js/app.es6.js',
-					'static/js/ext.min.js'
+					'static/js/ext.min.js',
+					'static/views/*.html'
 				],
-				tasks: ['copy:native']
+				tasks: ['copy:srcnative']
 			}
 		},
 		clean: []

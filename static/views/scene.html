@@ -19,7 +19,7 @@
 			<div class="form-group" ng-show="!scene" style="width:50%">
 				<div ng-if="film.scenes.length && !scene" ppg-carousel="film.scenes">
 					<img ng-repeat="scene in film.scenes track by scene._id"
-					ng-src="{{scene.screenshot||'/img/web/scene001.jpg'}}"
+					ng-src="{{scene.screenshot||'img/web/scene001.jpg'}}"
 					alt="{{scene.name}}"
 					style="margin-right:5px;height:34px"
 					ng-click="selectScene(scene)"/>
