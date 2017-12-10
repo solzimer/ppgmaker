@@ -19,6 +19,7 @@ node_modules
 npm-debug.log
 bower_components
 native/platforms
+native/platforms/*
 native/www/data
 native/www/img/*
 native/www/css/*
