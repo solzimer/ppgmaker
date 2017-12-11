@@ -8,34 +8,17 @@ module.exports = function(grunt) {
 	// Project configuration.
 	grunt.initConfig({
 	  pkg: grunt.file.readJSON('package.json'),
+
 		concat: {
 			options: {
 				sourceMap: true,
 				sourceMapName : 'static/js/app.es6.js.map',
 				sourceMapRootpath : '/js',
 			},
-			app : {
-				src: ['static/src/**/*.js'],
-				dest: 'static/js/app.es6.js'
-			},
-			css : {
-				src: ['static/css/**/*.js','!static/css/all.css'],
-				dest: 'static/css/all.css'
-			},
+			app : {src: ['static/src/**/*.js'], dest: 'static/js/app.es6.js'},
+			css : {src: ['static/css/**/*.js','!static/css/all.css'], dest: 'static/css/all.css'},
 		},
-		babel: {
-			options: {
-				sourceMap: true,
-				sourceMapName : 'static/js/app.js.map',
-				sourceMapUrl : '/js/app.js.map',
-				presets: ['es2015']
-			},
-			dist: {
-				files: {
-					'static/app.js': 'static/app.es6.js'
-				}
-			}
-		},
+
 		copy : {
 			srcnative : {
 				files : [
@@ -54,6 +37,7 @@ module.exports = function(grunt) {
 				]
 			}
 		},
+
 	  uglify: {
 	    options: {
 	      banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
@@ -79,20 +63,15 @@ module.exports = function(grunt) {
 				}
     	}
 	  },
+
 		watch: {
 			app: {
 				files: ['static/src/**/*.js'],
 				tasks: ['concat:app'],
-				options: {
-					spawn: false,
-				},
+				options: {spawn: false,},
 			},
 			native: {
-				files: [
-					'static/js/app.es6.js',
-					'static/js/ext.min.js',
-					'static/views/*.html'
-				],
+				files: ['static/js/app.es6.js','static/js/ext.min.js','static/views/*.html'],
 				tasks: ['copy:srcnative']
 			}
 		},
@@ -105,7 +84,10 @@ module.exports = function(grunt) {
 		},
 
 		concurrent: {
-				app: ['watch:app', 'watch:native', 'run:server'],
+			options: {
+				logConcurrentOutput: true
+			},
+			app: ['watch:app', 'watch:native', 'run:server'],
 		},
 
 		clean: []
@@ -113,5 +95,5 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('build', ['concat','uglify','copy']);
 	grunt.registerTask('default', ['concat','uglify','copy']);
-	grunt.registerTask('app', ['concurrent:app']);
+	grunt.registerTask('start', ['concurrent:app']);
 };
