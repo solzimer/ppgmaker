@@ -96,8 +96,22 @@ module.exports = function(grunt) {
 				tasks: ['copy:srcnative']
 			}
 		},
+
+		run: {
+			options: {},
+			server: {
+				cmd: 'node', args: ['index.js']
+			}
+		},
+
+		concurrent: {
+				app: ['watch:app', 'watch:native', 'run:server'],
+		},
+
 		clean: []
 	});
 
+	grunt.registerTask('build', ['concat','uglify','copy']);
 	grunt.registerTask('default', ['concat','uglify','copy']);
+	grunt.registerTask('app', ['concurrent:app']);
 };

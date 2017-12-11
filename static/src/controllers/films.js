@@ -8,5 +8,5 @@ controller("FilmsController",function($scope,$element,$interval,$q,sceneService)
 		});
 	}
 
-	init(true);
+	init();
 });

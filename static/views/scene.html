@@ -57,6 +57,7 @@
 <!-- Scene -->
 <div class="fill scene">
 	<div class="element-container fill" ppg-play="play" style="background-image:url('{{scene.background.src}}')">
+		<div class="trash-container" ppg-trash="film.scenes"></div>
 		<img ng-repeat="item in scene.items"
 			class="element"
 			ppg-draggable
