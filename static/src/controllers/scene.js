@@ -1,5 +1,5 @@
 angular.module('ppgmaker').
-controller("SceneController",function($scope,$stateParams,$element,$interval,$q,itemsService,sceneService){
+controller("SceneController",function($scope,$stateParams,$element,$interval,$q,styleService,itemsService,sceneService){
 	var MAX = 5;
 	var MAX_TIME = 30000;
 	var recordTimeout = null;
@@ -102,7 +102,26 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 	$scope.addItem = function(item) {
 		if(!$scope.addDisabled) {
 			item = JSON.parse(JSON.stringify(item));
+			item.eid = `ppgm_item_${Date.now()}`;
 			$scope.scene.items.push(item);
+		}
+	}
+
+	$scope.overlaps = function(eid) {
+		if(eid!=$scope.overlapItem) {
+			$scope.overlapItem = eid;
+		}
+	}
+
+	$scope.itemDropped = function(eid) {
+		let eitem = $scope.overlapItem;
+		if(eitem && eid==eitem) {
+			let idx = $scope.scene.items.findIndex(item=>item.eid==eid);
+			if(idx>=0) {
+				$scope.overlapItem = null;
+				$scope.scene.items.splice(idx,1);
+				styleService.remove(eid);
+			}
 		}
 	}
 
@@ -125,6 +144,7 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 		stopRecord().then(()=>{
 			$scope.play = -1;
 			$scope.scene = null;
+			styleService.clean();
 		});
 	}
 

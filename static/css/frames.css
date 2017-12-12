@@ -14,6 +14,9 @@
 	border-radius: 15px 15px 0 0;	padding: 15px 10px 30px 30px;
 	border:none; position:fixed; z-index:1000;
 	width:90%; left:5%;	bottom:0;	height:93px;
+	animation-name: hide-up;
+  animation-duration: 1s;
+	animation-fill-mode: forwards;
 }
 .frame.frame-bottom:after {
 	content: "";  display: block;
@@ -30,6 +33,11 @@
 @keyframes hide-down {
 	from {bottom:0;}
 	to {bottom:-93px;}
+}
+
+@keyframes hide-up {
+	from {bottom:-93px;}
+	to {bottom:0;}
 }
 
 .frame.pink {background-color: #b9247d;}

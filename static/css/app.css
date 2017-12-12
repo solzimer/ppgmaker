@@ -121,7 +121,7 @@ a.action {
 }
 
 .trash-container {
-	width:100px;
+	width:50px;
 	height:100%;
 	position:absolute;
 	left:0;
@@ -133,4 +133,16 @@ a.action {
 
 .trash-container.overlap {
 	opacity: 1;
+}
+
+a.trash-can {
+	color: #d67070;
+	display: block;
+	position: absolute;
+	top: 50%;
+	left: 0;
+}
+
+a.trash-can.overlap {
+	color: #FFF;
 }

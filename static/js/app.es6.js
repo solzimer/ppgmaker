@@ -1,5 +1,6 @@
 angular.module('ppgmaker', ['ui.bootstrap','ui.router']).
-config(function($stateProvider,$urlRouterProvider) {
+config(function($stateProvider,$urlRouterProvider,templateProvider) {
+
   $stateProvider.state("home",{
 		url: '/home',
 	  template: '<h3>hello world!</h3>'
@@ -8,13 +9,13 @@ config(function($stateProvider,$urlRouterProvider) {
 	$stateProvider.state("films",{
 		url: '/films',
 		controller : 'FilmsController',
-	  templateUrl: 'views/films.html'
+	  template: templateProvider.films
 	});
 
   $stateProvider.state("scene",{
 		url: '/scene/:id',
 		controller : 'SceneController',
-	  templateUrl: 'views/scene.html'
+	  template: templateProvider.scene
 	});
 
 	$urlRouterProvider.otherwise("/films");
@@ -37,7 +38,7 @@ controller("FilmsController",function($scope,$element,$interval,$q,sceneService)
 });
 
 angular.module('ppgmaker').
-controller("SceneController",function($scope,$stateParams,$element,$interval,$q,itemsService,sceneService){
+controller("SceneController",function($scope,$stateParams,$element,$interval,$q,styleService,itemsService,sceneService){
 	var MAX = 5;
 	var MAX_TIME = 30000;
 	var recordTimeout = null;
@@ -140,7 +141,26 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 	$scope.addItem = function(item) {
 		if(!$scope.addDisabled) {
 			item = JSON.parse(JSON.stringify(item));
+			item.eid = `ppgm_item_${Date.now()}`;
 			$scope.scene.items.push(item);
+		}
+	}
+
+	$scope.overlaps = function(eid) {
+		if(eid!=$scope.overlapItem) {
+			$scope.overlapItem = eid;
+		}
+	}
+
+	$scope.itemDropped = function(eid) {
+		let eitem = $scope.overlapItem;
+		if(eitem && eid==eitem) {
+			let idx = $scope.scene.items.findIndex(item=>item.eid==eid);
+			if(idx>=0) {
+				$scope.overlapItem = null;
+				$scope.scene.items.splice(idx,1);
+				styleService.remove(eid);
+			}
 		}
 	}
 
@@ -163,6 +183,7 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 		stopRecord().then(()=>{
 			$scope.play = -1;
 			$scope.scene = null;
+			styleService.clean();
 		});
 	}
 
@@ -202,7 +223,7 @@ angular.module('ppgmaker').directive("ppgCarousel",function($timeout,styleServic
 angular.module('ppgmaker').directive("ppgDraggable",function(styleService) {
 	var DRG = "hammer_drag";
 
-	function handleDrag(ev) {
+	function handleDrag(ev,scope) {
 		var elem = $(ev.target);
 
 		if (!elem.data(DRG)) {
@@ -219,13 +240,15 @@ angular.module('ppgmaker').directive("ppgDraggable",function(styleService) {
 
 		if (ev.isFinal) {
 			elem.data(DRG,null);
+			scope.$eval(elem.attr("on-ppg-drop"))(elem.attr("id"));
+			scope.$apply();
 		}
 	}
 
 	function link(scope,elem,attrs) {
 		var mc = new Hammer(elem[0]);
 		mc.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
-		mc.on("pan", handleDrag);
+		mc.on("pan",ev=>handleDrag(ev,scope));
 	}
 
 	return {
@@ -309,6 +332,46 @@ angular.module('ppgmaker').directive("ppgFlip",function(styleService) {
 
 	return {
 		link : link
+	}
+});
+
+angular.module('ppgmaker').directive("ppgOverlap",function(styleService) {
+	function overlap(rect1,rect2) {
+		return !(
+			rect1.right < rect2.left ||
+			rect1.left > rect2.right ||
+			rect1.bottom < rect2.top ||
+			rect1.top > rect2.bottom
+		);
+	}
+
+	function link(scope,elem,attrs) {
+		let box = elem[0].getBoundingClientRect();
+		let fn = function() {
+			requestAnimationFrame(fn);
+			if(scope.disabled) return;
+			let model = styleService.model;
+			let oid = null;
+			let ret = Object.keys(model).some(id=>{
+				let elem = document.getElementById(id);
+				if(!elem) return false;
+				let ebox = elem.getBoundingClientRect();
+				return overlap(box,ebox) && (oid = id);
+			});
+			if(ret) $(elem).addClass("overlap");
+			else $(elem).removeClass("overlap");
+			scope.onOverlap({item:oid});
+		}
+		fn();
+	}
+
+	return {
+		link : link,
+		scope : {
+			ppgOverlap : "=",
+			disabled : "=",
+			onOverlap : "&"
+		}
 	}
 });
 
@@ -461,40 +524,6 @@ angular.module('ppgmaker').directive("ppgResizable",function(styleService) {
 	}
 });
 
-angular.module('ppgmaker').directive("ppgTrash",function(styleService) {
-	function overlap(rect1,rect2) {
-		return !(
-			rect1.right < rect2.left ||
-			rect1.left > rect2.right ||
-			rect1.bottom < rect2.top ||
-			rect1.top > rect2.bottom
-		);
-	}
-
-	function link(scope,elem,attrs) {
-		let box = elem[0].getBoundingClientRect();
-		let fn = function() {
-			requestAnimationFrame(fn);
-			let model = styleService.model;
-			let ret = Object.keys(model).some(id=>{
-				let elem = document.getElementById(id);
-				let ebox = elem.getBoundingClientRect();
-				return overlap(box,ebox);
-			});
-			if(ret) $(elem).addClass("overlap");
-			else $(elem).removeClass("overlap");
-		}
-		fn();
-	}
-
-	return {
-		link : link,
-		scope : {
-			ppgTrash : "="
-		}
-	}
-});
-
 angular.module("ppgmaker").
 filter("imgsrc",function(){
 	return function(input,size) {
@@ -509,6 +538,15 @@ filter("imgsrc",function(){
 		else {
 			return input.src;
 		}
+	}
+});
+
+angular.module("ppgmaker").provider("template",function(){
+	this.films = "<div class=\"row\">\r\n\t<div class=\"col-lg-12\">\r\n\t\t<h2><a href=\"#\" ui-sref=\"scene({id:'new'})\">New Film...</a></h2>\r\n\t</div>\r\n</div>\r\n\r\n<ul class=\"film-list\">\r\n\t<li ng-repeat=\"film in films\">\r\n\t\t<h3><a href=\"#\" ui-sref=\"scene({id:film._id})\">{{film.name}}<a></h3>\r\n\t\t<div class=\"film-scenes\" ppg-carousel=\"film.scenes\">\r\n\t\t\t<img ng-repeat=\"scene in film.scenes\"\r\n\t\t\t\tui-sref=\"scene({id:film._id})\"\r\n\t\t\t\tng-src=\"{{scene.screenshot||'img/web/scene001.jpg'}}\"/>\r\n\t\t</div>\r\n\t</li>\r\n</ul>\r\n";
+	this.scene = "<!-- Top buttons -->\r\n<div class=\"frame frame-top orange cover\" ng-class=\"{transparent:record}\">\r\n\t<div class=\"row\">\r\n\t\t<form class=\"form-inline\">\r\n\t\t\t<div class=\"form-group\">\r\n\t\t\t\t<a class=\"action\" ui-sref=\"films()\"><i class=\"fa fa-home\"></i></a>\r\n\t\t\t\t<a class=\"action danger\" ng-show=\"scene\" ng-click=\"toggleRecord()\"><i class=\"fa\" ng-class=\"{'fa-circle':!record,'fa-pause':record}\"></i></a>\r\n\t\t\t\t<a class=\"action\" ng-show=\"scene\" ng-click=\"togglePlay()\"><i class=\"fa\" ng-class=\"{'fa-play':play<0,'fa-stop':play>=0}\"></i></a>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"form-group\" ng-show=\"scene\">\r\n\t\t\t\t<uib-progressbar style=\"width:300px\" class=\"progress-bar-danger progress-big active\" value=\"time\" type=\"success\"></uib-progressbar>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"form-group\" ng-show=\"scene\">\r\n\t\t\t\t<a class=\"action\" ng-click=\"backScene()\"><i class=\"fa fa-reply\"></i></a>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"form-group\" ng-show=\"!scene\">\r\n\t\t\t\t<a class=\"action\" ng-click=\"newScene()\"><i class=\"fa fa-plus\"></i></a>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"form-group\" ng-show=\"!scene\" style=\"width:50%\">\r\n\t\t\t\t<div ng-if=\"film.scenes.length && !scene\" ppg-carousel=\"film.scenes\">\r\n\t\t\t\t\t<img ng-repeat=\"scene in film.scenes track by scene._id\"\r\n\t\t\t\t\tng-src=\"{{scene.screenshot||'img/web/scene001.jpg'}}\"\r\n\t\t\t\t\talt=\"{{scene.name}}\"\r\n\t\t\t\t\tstyle=\"margin-right:5px;height:34px\"\r\n\t\t\t\t\tng-click=\"selectScene(scene)\"/>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t</form>\r\n\t</div>\r\n</div>\r\n\r\n<!-- Item selector -->\r\n<uib-tabset active=\"active\" class=\"frame frame-bottom pink\">\r\n\t<uib-tab index=\"-1\" heading=\"Places\">\r\n\t\t<div style=\"padding:10px\" ppg-carousel=\"allitems.backgrounds.items\">\r\n\t\t\t<img ng-repeat=\"bg in allitems.backgrounds.items\"\r\n\t\t\tclass=\"item\"\r\n\t\t\tng-class=\"{disabled:record}\"\r\n\t\t\tng-src=\"{{bg.src}}\"\r\n\t\t\tstyle=\"margin-right:5px\"\r\n\t\t\tng-click=\"setBackground(bg)\"/>\r\n\t\t</div>\r\n\t</uib-tab>\r\n\t<uib-tab ng-repeat=\"section in allitems.sections\" index=\"$index\">\r\n\t\t<uib-tab-heading>{{section.id}}</uib-tab-heading>\r\n\t\t<div style=\"padding:10px\" ppg-carousel=\"section.items\">\r\n\t\t\t<img ng-repeat=\"item in section.items\"\r\n\t\t\tclass=\"item\"\r\n\t\t\tng-class=\"{disabled:addDisabled || record}\"\r\n\t\t\tng-src=\"{{item | imgsrc:'sm'}}\"\r\n\t\t\tstyle=\"margin-right:5px\"\r\n\t\t\tng-click=\"addItem(item)\"/>\r\n\t\t</div>\r\n\t</uib-tab>\r\n</uib-tabset>\r\n\r\n<!-- Scene -->\r\n<div class=\"fill scene\">\r\n\t<div class=\"element-container fill\" ppg-play=\"play\" style=\"background-image:url('{{scene.background.src}}')\">\r\n\t\t<div class=\"trash-container\" ppg-overlap=\"film.scenes\">\r\n\t\t\t<a class=\"action trash-can\" ppg-overlap=\"film.scenes\" on-overlap=\"overlaps(item)\"><i class=\"fa fa-trash\"></i></a>\r\n\t\t</div>\r\n\t\t<img ng-repeat=\"item in scene.items\"\r\n\t\t\tid=\"{{item.eid}}\"\r\n\t\t\tclass=\"element\"\r\n\t\t\tppg-draggable\r\n\t\t\tppg-flip\r\n\t\t\tppg-record=\"item.buffer\"\r\n\t\t\tppg-effects=\"item.effects\"\r\n\t\t\ton-ppg-drop=\"itemDropped\"\r\n\t\t\trecord=\"record\" play=\"play\"\r\n\t\t\tng-src=\"{{item | imgsrc:'xl'}}\" />\r\n\t</div>\r\n</div>\r\n"
+
+	this.$get = function() {
+		return this;
 	}
 });
 
@@ -562,6 +600,13 @@ angular.module("ppgmaker").service("sceneService",function($q){
 			if(!mini) {
 				this.items = props.items || [];
 				this.idfilm = props.idfilm || "";
+			}
+
+			if(this.items) {
+				let now = Date.now();
+				this.items.forEach(item=>{
+					item.eid = item.eid || `ppgm_item_${now++}`;
+				});
 			}
 		}
 
@@ -727,6 +772,12 @@ angular.module("ppgmaker").service("styleService",function(){
 	this.remove = function(id) {
 		id = elemId(id);
 		delete this.model[id];
+	}
+
+	this.clean = function() {
+		Object.keys(this.model).forEach(k=>{
+			delete this.model[k];
+		});
 	}
 });
 

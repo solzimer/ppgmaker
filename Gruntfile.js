@@ -10,13 +10,16 @@ module.exports = function(grunt) {
 	  pkg: grunt.file.readJSON('package.json'),
 
 		concat: {
-			options: {
-				sourceMap: true,
-				sourceMapName : 'static/js/app.es6.js.map',
-				sourceMapRootpath : '/js',
+			app : {
+				options: {
+					sourceMap: true,
+					sourceMapName : 'static/js/app.es6.js.map',
+					sourceMapRootpath : '/js',
+				},
+				src: ['static/src/**/*.js'],
+				dest: 'static/js/app.es6.js'
 			},
-			app : {src: ['static/src/**/*.js'], dest: 'static/js/app.es6.js'},
-			css : {src: ['static/css/**/*.js','!static/css/all.css'], dest: 'static/css/all.css'},
+			css : {	src: ['static/css/**/*.js','!static/css/all.css'], dest: 'static/css/all.css'},
 		},
 
 		copy : {
@@ -66,8 +69,8 @@ module.exports = function(grunt) {
 
 		watch: {
 			app: {
-				files: ['static/src/**/*.js'],
-				tasks: ['concat:app'],
+				files: ['static/src/**/*.js','static/views/*.html'],
+				tasks: ['run:templates','concat:app'],
 				options: {spawn: false,},
 			},
 			native: {
@@ -80,6 +83,10 @@ module.exports = function(grunt) {
 			options: {},
 			server: {
 				cmd: 'node', args: ['index.js']
+			},
+			templates : {
+				options : {cwd:"script"},
+				cmd: 'node', args: ['compileviews.js']
 			}
 		},
 
@@ -93,7 +100,7 @@ module.exports = function(grunt) {
 		clean: []
 	});
 
-	grunt.registerTask('build', ['concat','uglify','copy']);
-	grunt.registerTask('default', ['concat','uglify','copy']);
+	grunt.registerTask('build', ['run:templates','concat','uglify','copy']);
+	grunt.registerTask('default', ['run:templates','concat','uglify','copy']);
 	grunt.registerTask('start', ['concurrent:app']);
 };

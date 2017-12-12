@@ -1,5 +1,6 @@
 angular.module('ppgmaker', ['ui.bootstrap','ui.router']).
-config(function($stateProvider,$urlRouterProvider) {
+config(function($stateProvider,$urlRouterProvider,templateProvider) {
+
   $stateProvider.state("home",{
 		url: '/home',
 	  template: '<h3>hello world!</h3>'
@@ -8,13 +9,13 @@ config(function($stateProvider,$urlRouterProvider) {
 	$stateProvider.state("films",{
 		url: '/films',
 		controller : 'FilmsController',
-	  templateUrl: 'views/films.html'
+	  template: templateProvider.films
 	});
 
   $stateProvider.state("scene",{
 		url: '/scene/:id',
 		controller : 'SceneController',
-	  templateUrl: 'views/scene.html'
+	  template: templateProvider.scene
 	});
 
 	$urlRouterProvider.otherwise("/films");

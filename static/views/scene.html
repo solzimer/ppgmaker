@@ -57,13 +57,17 @@
 <!-- Scene -->
 <div class="fill scene">
 	<div class="element-container fill" ppg-play="play" style="background-image:url('{{scene.background.src}}')">
-		<div class="trash-container" ppg-trash="film.scenes"></div>
+		<div class="trash-container" ppg-overlap="film.scenes">
+			<a class="action trash-can" ppg-overlap="film.scenes" on-overlap="overlaps(item)"><i class="fa fa-trash"></i></a>
+		</div>
 		<img ng-repeat="item in scene.items"
+			id="{{item.eid}}"
 			class="element"
 			ppg-draggable
 			ppg-flip
 			ppg-record="item.buffer"
 			ppg-effects="item.effects"
+			on-ppg-drop="itemDropped"
 			record="record" play="play"
 			ng-src="{{item | imgsrc:'xl'}}" />
 	</div>

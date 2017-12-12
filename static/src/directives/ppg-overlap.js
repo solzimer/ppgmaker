@@ -1,4 +1,4 @@
-angular.module('ppgmaker').directive("ppgTrash",function(styleService) {
+angular.module('ppgmaker').directive("ppgOverlap",function(styleService) {
 	function overlap(rect1,rect2) {
 		return !(
 			rect1.right < rect2.left ||
@@ -12,14 +12,18 @@ angular.module('ppgmaker').directive("ppgTrash",function(styleService) {
 		let box = elem[0].getBoundingClientRect();
 		let fn = function() {
 			requestAnimationFrame(fn);
+			if(scope.disabled) return;
 			let model = styleService.model;
+			let oid = null;
 			let ret = Object.keys(model).some(id=>{
 				let elem = document.getElementById(id);
+				if(!elem) return false;
 				let ebox = elem.getBoundingClientRect();
-				return overlap(box,ebox);
+				return overlap(box,ebox) && (oid = id);
 			});
 			if(ret) $(elem).addClass("overlap");
 			else $(elem).removeClass("overlap");
+			scope.onOverlap({item:oid});
 		}
 		fn();
 	}
@@ -27,7 +31,9 @@ angular.module('ppgmaker').directive("ppgTrash",function(styleService) {
 	return {
 		link : link,
 		scope : {
-			ppgTrash : "="
+			ppgOverlap : "=",
+			disabled : "=",
+			onOverlap : "&"
 		}
 	}
 });

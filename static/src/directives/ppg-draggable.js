@@ -1,7 +1,7 @@
 angular.module('ppgmaker').directive("ppgDraggable",function(styleService) {
 	var DRG = "hammer_drag";
 
-	function handleDrag(ev) {
+	function handleDrag(ev,scope) {
 		var elem = $(ev.target);
 
 		if (!elem.data(DRG)) {
@@ -18,13 +18,15 @@ angular.module('ppgmaker').directive("ppgDraggable",function(styleService) {
 
 		if (ev.isFinal) {
 			elem.data(DRG,null);
+			scope.$eval(elem.attr("on-ppg-drop"))(elem.attr("id"));
+			scope.$apply();
 		}
 	}
 
 	function link(scope,elem,attrs) {
 		var mc = new Hammer(elem[0]);
 		mc.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
-		mc.on("pan", handleDrag);
+		mc.on("pan",ev=>handleDrag(ev,scope));
 	}
 
 	return {

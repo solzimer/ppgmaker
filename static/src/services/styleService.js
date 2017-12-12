@@ -43,4 +43,10 @@ angular.module("ppgmaker").service("styleService",function(){
 		id = elemId(id);
 		delete this.model[id];
 	}
+
+	this.clean = function() {
+		Object.keys(this.model).forEach(k=>{
+			delete this.model[k];
+		});
+	}
 });

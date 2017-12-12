@@ -30,6 +30,13 @@ angular.module("ppgmaker").service("sceneService",function($q){
 				this.items = props.items || [];
 				this.idfilm = props.idfilm || "";
 			}
+
+			if(this.items) {
+				let now = Date.now();
+				this.items.forEach(item=>{
+					item.eid = item.eid || `ppgm_item_${now++}`;
+				});
+			}
 		}
 
 		mini() {
