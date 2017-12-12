@@ -1,21 +1,24 @@
 {
-  "name": "helloworld",
-  "displayName": "HelloCordova",
+  "name": "PPGMaker",
+  "displayName": "PPG Maker",
   "version": "1.0.0",
-  "description": "A sample Apache Cordova application that responds to the deviceready event.",
+  "description": "Powerpuff Girls Maker",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Apache Cordova Team",
+  "author": "David Gómez Matarrodona",
   "license": "Apache-2.0",
   "dependencies": {
     "cordova-ios": "^4.5.4",
-    "cordova-plugin-whitelist": "^1.3.3"
+    "cordova-plugin-whitelist": "^1.3.3",
+    "cordova-plugin-wkwebview-engine": "^1.1.4",
+    "cordova-plugin-wkwebview-file-xhr": "^2.1.0"
   },
   "cordova": {
     "plugins": {
-      "cordova-plugin-whitelist": {}
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-wkwebview-file-xhr": {}
     },
     "platforms": [
       "ios"
