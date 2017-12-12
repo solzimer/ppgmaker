@@ -19,6 +19,9 @@
 var app = {
     // Application Constructor
     initialize: function() {
+        TouchEmulator();
+
+        document.body.ontouchmove = function (e) {e.preventDefault();} // Disable scrolling.
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
     },
 

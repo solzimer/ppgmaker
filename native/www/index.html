@@ -45,21 +45,13 @@
     	<ui-view></ui-view>
 
         <script id="view_films" type="text/html" src="views/films.html"></script>
-        
+
     	<!-- Core scripts -->
       <script type="text/javascript" src="cordova.js"></script>
-      <script type="text/javascript" src="js/index.js"></script>
     	<script type="text/javascript" src="js/ext.min.js"></script>
-    	<script type="text/javascript">TouchEmulator();</script>
+      <script type="text/javascript" src="js/index.js"></script>
 
     	<!-- Application scripts -->
     	<script type="text/javascript" src="js/app.es6.js"></script>
-
-    	<script type="text/javascript">
-    		// Disable scrolling.
-    		document.body.ontouchmove = function (e) {
-    		  e.preventDefault();
-    		}
-    	</script>
     </body>
 </html>
