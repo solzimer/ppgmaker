@@ -12,6 +12,9 @@
     },
     "cordova-plugin-wkwebview-file-xhr": {
       "PACKAGE_NAME": "ppgmaker"
+    },
+    "com.darktalker.cordova.screenshot": {
+      "PACKAGE_NAME": "ppgmaker"
     }
   },
   "dependent_plugins": {

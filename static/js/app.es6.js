@@ -38,12 +38,11 @@ controller("FilmsController",function($scope,$element,$interval,$q,sceneService)
 });
 
 angular.module('ppgmaker').
-controller("SceneController",function($scope,$stateParams,$element,$interval,$q,styleService,itemsService,sceneService){
+controller("SceneController",function($scope,$q,$stateParams,$element,$interval,screenshotService,styleService,itemsService,sceneService){
 	var MAX = 5;
 	var MAX_TIME = 30000;
 	var recordTimeout = null;
 	var elemScene = $(".scene",$element).get(0);
-	var canvas = document.createElement("canvas");
 
 	$scope.addDisabled = false;
 	$scope.record = false;
@@ -91,14 +90,6 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 		});
 	}
 
-	function resizeImage(img) {
-		var ctx = canvas.getContext('2d');
-		canvas.height = 100;
-		canvas.width = img.width*canvas.height/img.height;
-		ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-		return canvas.toDataURL();
-	}
-
 	function resetBuffers() {
 		$scope.scene.items.forEach(item => {
 			item.buffer.splice(0,item.buffer.length);
@@ -120,12 +111,11 @@ controller("SceneController",function($scope,$stateParams,$element,$interval,$q,
 		$scope.record = false;
 		$interval.cancel(recordTimeout);
 
-		return $q(res=>html2canvas(elemScene,{onrendered:res})).
-			then(canvas=>resizeImage(canvas)).
+		return screenshotService.take(elemScene,100,100).
 			then(img=>$scope.scene.screenshot=img).
 			then(()=>$scope.scene.save()).
 			then(()=>$scope.film.update($scope.scene,true)).
-			catch(err=>console.log(err.message));
+			catch(err=>console.error(err));
 	}
 
 	$scope.newScene = function() {
@@ -668,7 +658,8 @@ angular.module("ppgmaker").service("sceneService",function($q){
 
 		update(scene,save) {
 			return q().
-					then(()=>this.find(scene).extend(scene,true)).
+					then(()=>this.find(scene)).
+					then(old=>old.extend(scene,true)).
 					then(()=>{
 						if(save) return this.save();
 						else return this;
@@ -726,6 +717,32 @@ angular.module("ppgmaker").service("sceneService",function($q){
 	}
 
 	init();
+});
+
+angular.module("ppgmaker").service("screenshotService",function($q){
+	var canvas = document.createElement("canvas");
+
+	this.take = function(elem,w,h) {
+		if(window.isCordova) return takeCordova(elem,w,h);
+		else return takeBrowser(elem,w,h);
+	}
+
+	function resizeImage(img,h) {
+		let ctx = canvas.getContext('2d');
+		canvas.height = h;
+		canvas.width = img.width*canvas.height/img.height;
+		ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+		return canvas.toDataURL();
+	}
+
+	function takeBrowser(elemScene,w,h) {
+		return $q(res=>html2canvas(elemScene,{onrendered:res})).
+			then(canvas=>resizeImage(canvas,h));
+	}
+
+	function takeCordova(elem,w,h) {
+		return takeBrowser(elem,w,h);
+	}
 });
 
 angular.module("ppgmaker").service("styleService",function(){

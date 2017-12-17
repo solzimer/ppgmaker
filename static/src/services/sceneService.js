@@ -97,7 +97,8 @@ angular.module("ppgmaker").service("sceneService",function($q){
 
 		update(scene,save) {
 			return q().
-					then(()=>this.find(scene).extend(scene,true)).
+					then(()=>this.find(scene)).
+					then(old=>old.extend(scene,true)).
 					then(()=>{
 						if(save) return this.save();
 						else return this;
