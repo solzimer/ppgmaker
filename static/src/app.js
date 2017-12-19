@@ -12,10 +12,16 @@ config(function($stateProvider,$urlRouterProvider,templateProvider) {
 	  template: templateProvider.films
 	});
 
-  $stateProvider.state("scene",{
-		url: '/scene/:id',
+  $stateProvider.state("film",{
+		url: '/film/:id',
 		controller : 'SceneController',
 	  template: templateProvider.scene
+	});
+
+	$stateProvider.state("player",{
+		url: '/player/:id',
+		controller : 'PlayerController',
+	  template: templateProvider.player
 	});
 
 	$urlRouterProvider.otherwise("/films");

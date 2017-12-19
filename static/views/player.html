@@ -1,0 +1,11 @@
+<!-- Scene -->
+<div class="fill scene">
+	<div class="element-container fill" ppg-play="play" style="background-image:url('{{scene.background.src}}')">
+		<img ng-repeat="item in scene.items"
+			id="{{item.eid}}"
+			class="element"
+			ppg-record="item.buffer"
+			play="play"
+			ng-src="{{item | imgsrc:'xl'}}" />
+	</div>
+</div>
