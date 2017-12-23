@@ -20,6 +20,14 @@ angular.module("ppgmaker").service("screenshotService",function($q){
 	}
 
 	function takeCordova(elem,w,h) {
-		return takeBrowser(elem,w,h);
+		let quality = '80';
+		let defer = $q.defer();
+
+		navigator.screenshot.URI((error, res) => {
+			if (error) defer.reject(error);
+			else defer.resolve(res.URI);
+		}, quality);
+
+		return defer.promise;
 	}
 });
