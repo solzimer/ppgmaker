@@ -1,5 +1,15 @@
 angular.module('ppgmaker').directive("ppgDraggable",function(styleService) {
-	var DRG = "hammer_drag";
+	const DRG = "hammer_drag";
+
+	function isOutside(elem,dx,dy) {
+		let box = elem[0].getBoundingClientRect();
+		let ww = window.innerWidth, wh = window.innerHeight;
+		if(box.x<0 && dx<0) return true;
+		else if(box.y<0 && dy<0) return true;
+		else if((box.x+box.width)>ww && dx>0) return true;
+		else if((box.y+box.height)>wh && dy>0) return true;
+		else return false;
+	}
 
 	function handleDrag(ev,scope) {
 		var elem = $(ev.target);
@@ -8,13 +18,14 @@ angular.module('ppgmaker').directive("ppgDraggable",function(styleService) {
 			elem.data(DRG,elem.position());
 		}
 
-		var oldPos = elem.data(DRG);
-		var posX = ev.deltaX + oldPos.left;
-		var posY = ev.deltaY + oldPos.top;
-		var newPos = {left:posX,top:posY};
-
-		elem.css(newPos);
-		styleService.set(elem,newPos);
+		if(!isOutside(elem,ev.deltaX,ev.deltaY)) {
+			var oldPos = elem.data(DRG);
+			var posX = ev.deltaX + oldPos.left;
+			var posY = ev.deltaY + oldPos.top;
+			var newPos = {left:posX,top:posY};
+			elem.css(newPos);
+			styleService.set(elem,newPos);
+		}
 
 		if (ev.isFinal) {
 			elem.data(DRG,null);

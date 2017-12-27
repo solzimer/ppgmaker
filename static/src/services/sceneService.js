@@ -27,6 +27,7 @@ angular.module("ppgmaker").service("sceneService",function($q){
 			this.screenshot = props.screenshot || "";
 
 			if(!mini) {
+				this.sound = props.sound || null;
 				this.items = props.items || [];
 				this.idfilm = props.idfilm || "";
 			}
