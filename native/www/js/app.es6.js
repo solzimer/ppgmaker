@@ -44,7 +44,7 @@ controller("FilmsController",function($scope,$element,$interval,$q,sceneService)
 });
 
 angular.module('ppgmaker').
-controller("PlayerController",function($scope,$stateParams,$timeout,sceneService){
+controller("PlayerController",function($scope,$stateParams,$state,$timeout,sceneService){
 	var idx = 0;
 	var watch = null;
 
@@ -270,25 +270,31 @@ angular.module('ppgmaker').directive("ppgCarousel",function($timeout,styleServic
 });
 
 angular.module('ppgmaker').directive("ppgDraggable",function(styleService) {
-	var DRG = "hammer_drag";
+	const
+		DRG = "hammer_drag",
+		BOX = "hammer_drag_box";
 
 	function handleDrag(ev,scope) {
 		var elem = $(ev.target);
 
 		if (!elem.data(DRG)) {
 			elem.data(DRG,elem.position());
+			elem.data(BOX,elem[0].getBoundingClientRect());
 		}
 
 		var oldPos = elem.data(DRG);
+		var box = elem.data(BOX);
 		var posX = ev.deltaX + oldPos.left;
 		var posY = ev.deltaY + oldPos.top;
+		posX = Math.min(Math.max(0,posX),window.innerWidth-box.width);
+		posY = Math.min(Math.max(0,posY),window.innerHeight-box.height);
 		var newPos = {left:posX,top:posY};
-
 		elem.css(newPos);
 		styleService.set(elem,newPos);
 
 		if (ev.isFinal) {
 			elem.data(DRG,null);
+			elem.data(BOX,null);
 			scope.$eval(elem.attr("on-ppg-drop"))(elem.attr("id"));
 			scope.$apply();
 		}
@@ -387,10 +393,10 @@ angular.module('ppgmaker').directive("ppgFlip",function(styleService) {
 angular.module('ppgmaker').directive("ppgOverlap",function(styleService) {
 	function overlap(rect1,rect2) {
 		return !(
-			rect1.right < rect2.left ||
-			rect1.left > rect2.right ||
-			rect1.bottom < rect2.top ||
-			rect1.top > rect2.bottom
+			rect1.right <= rect2.left ||
+			rect1.left >= rect2.right ||
+			rect1.bottom <= rect2.top ||
+			rect1.top >= rect2.bottom
 		);
 	}
 
@@ -599,9 +605,9 @@ filter("imgsrc",function(){
 });
 
 angular.module("ppgmaker").provider("template",function(){
-	this.films = "<div class=\"row\">\n\t<div class=\"col-lg-12\">\n\t\t<h2><a href=\"#\" ui-sref=\"film({id:'new'})\">New Film...</a></h2>\n\t</div>\n</div>\n\n<ul class=\"film-list\">\n\t<li ng-repeat=\"film in films\">\n\t\t<h3>\n\t\t\t<a href=\"#\" ui-sref=\"film({id:film._id})\">{{film.name}}<a>\n\t\t\t<a href=\"#\" ui-sref=\"player({id:film._id})\"><i class=\"fa fa-play\"></i></a>\n\t\t</h3>\n\t\t<div class=\"film-scenes\" ppg-carousel=\"film.scenes\">\n\t\t\t<img ng-repeat=\"scene in film.scenes\"\n\t\t\t\tui-sref=\"film({id:film._id})\"\n\t\t\t\tng-src=\"{{scene.screenshot||'img/web/scene001.jpg'}}\"/>\n\t\t</div>\n\t</li>\n</ul>\n";
-	this.player = "<!-- Scene -->\n<div class=\"fill scene\">\n\t<div class=\"element-container fill\" ppg-play=\"play\" style=\"background-image:url('{{scene.background.src}}')\">\n\t\t<img ng-repeat=\"item in scene.items\"\n\t\t\tid=\"{{item.eid}}\"\n\t\t\tclass=\"element\"\n\t\t\tppg-record=\"item.buffer\"\n\t\t\tplay=\"play\"\n\t\t\tng-src=\"{{item | imgsrc:'xl'}}\" />\n\t</div>\n</div>\n";
-	this.scene = "<!-- Top buttons -->\n<div class=\"frame frame-top orange cover\" ng-class=\"{transparent:record}\">\n\t<div class=\"row\">\n\t\t<form class=\"form-inline\">\n\t\t\t<div class=\"form-group\">\n\t\t\t\t<a class=\"action\" ui-sref=\"films()\"><i class=\"fa fa-home\"></i></a>\n\t\t\t\t<a class=\"action danger\" ng-show=\"scene\" ng-click=\"toggleRecord()\"><i class=\"fa\" ng-class=\"{'fa-circle':!record,'fa-pause':record}\"></i></a>\n\t\t\t\t<a class=\"action\" ng-show=\"scene\" ng-click=\"togglePlay()\"><i class=\"fa\" ng-class=\"{'fa-play':play<0,'fa-stop':play>=0}\"></i></a>\n\t\t\t</div>\n\t\t\t<div class=\"form-group\" ng-show=\"scene\">\n\t\t\t\t<uib-progressbar style=\"width:300px\" class=\"progress-bar-danger progress-big active\" value=\"time\" type=\"success\"></uib-progressbar>\n\t\t\t</div>\n\t\t\t<div class=\"form-group\" ng-show=\"scene\">\n\t\t\t\t<a class=\"action\" ng-click=\"backScene()\"><i class=\"fa fa-reply\"></i></a>\n\t\t\t</div>\n\t\t\t<div class=\"form-group\" ng-show=\"!scene\">\n\t\t\t\t<a class=\"action\" ng-click=\"newScene()\"><i class=\"fa fa-plus\"></i></a>\n\t\t\t</div>\n\t\t\t<div class=\"form-group\" ng-show=\"!scene\" style=\"width:50%\">\n\t\t\t\t<div ng-if=\"film.scenes.length && !scene\" ppg-carousel=\"film.scenes\">\n\t\t\t\t\t<img ng-repeat=\"scene in film.scenes track by scene._id\"\n\t\t\t\t\tng-src=\"{{scene.screenshot||'img/web/scene001.jpg'}}\"\n\t\t\t\t\talt=\"{{scene.name}}\"\n\t\t\t\t\tstyle=\"margin-right:5px;height:34px\"\n\t\t\t\t\tng-click=\"selectScene(scene)\"/>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</form>\n\t</div>\n</div>\n\n<!-- Item selector -->\n<uib-tabset active=\"active\" class=\"frame frame-bottom pink\">\n\t<uib-tab index=\"-1\" heading=\"Places\">\n\t\t<div style=\"padding:10px\" ppg-carousel=\"allitems.backgrounds.items\">\n\t\t\t<img ng-repeat=\"bg in allitems.backgrounds.items\"\n\t\t\tclass=\"item\"\n\t\t\tng-class=\"{disabled:record}\"\n\t\t\tng-src=\"{{bg.src}}\"\n\t\t\tstyle=\"margin-right:5px\"\n\t\t\tng-click=\"setBackground(bg)\"/>\n\t\t</div>\n\t</uib-tab>\n\t<uib-tab ng-repeat=\"section in allitems.sections\" index=\"$index\">\n\t\t<uib-tab-heading>{{section.id}}</uib-tab-heading>\n\t\t<div style=\"padding:10px\" ppg-carousel=\"section.items\">\n\t\t\t<img ng-repeat=\"item in section.items\"\n\t\t\tclass=\"item\"\n\t\t\tng-class=\"{disabled:addDisabled || record}\"\n\t\t\tng-src=\"{{item | imgsrc:'sm'}}\"\n\t\t\tstyle=\"margin-right:5px\"\n\t\t\tng-click=\"addItem(item)\"/>\n\t\t</div>\n\t</uib-tab>\n</uib-tabset>\n\n<!-- Scene -->\n<div class=\"fill scene\">\n\t<div class=\"element-container fill\" ppg-play=\"play\" style=\"background-image:url('{{scene.background.src}}')\">\n\t\t<div class=\"trash-container\" ppg-overlap=\"film.scenes\">\n\t\t\t<a class=\"action trash-can\" ppg-overlap=\"film.scenes\" on-overlap=\"overlaps(item)\"><i class=\"fa fa-trash\"></i></a>\n\t\t</div>\n\t\t<img ng-repeat=\"item in scene.items\"\n\t\t\tid=\"{{item.eid}}\"\n\t\t\tclass=\"element\"\n\t\t\tppg-draggable\n\t\t\tppg-flip\n\t\t\tppg-record=\"item.buffer\"\n\t\t\tppg-effects=\"item.effects\"\n\t\t\ton-ppg-drop=\"itemDropped\"\n\t\t\trecord=\"record\" play=\"play\"\n\t\t\tng-src=\"{{item | imgsrc:'xl'}}\" />\n\t</div>\n</div>\n"
+	this.films = "<div class=\"row container\">\r\n\t<div class=\"col-lg-12\">\r\n\t\t<h2><a href=\"#\" ui-sref=\"film({id:'new'})\">New Film...</a></h2>\r\n\t</div>\r\n</div>\r\n\r\n<ul class=\"film-list\">\r\n\t<li ng-repeat=\"film in films\">\r\n\t\t<h3>\r\n\t\t\t<a href=\"#\" ui-sref=\"film({id:film._id})\">{{film.name}}<a>\r\n\t\t\t<a href=\"#\" ui-sref=\"player({id:film._id})\"><i class=\"fa fa-play\"></i></a>\r\n\t\t</h3>\r\n\t\t<div class=\"film-scenes\" ppg-carousel=\"film.scenes\">\r\n\t\t\t<img ng-repeat=\"scene in film.scenes\"\r\n\t\t\t\tui-sref=\"film({id:film._id})\"\r\n\t\t\t\tng-src=\"{{scene.screenshot||'img/web/scene001.jpg'}}\"/>\r\n\t\t</div>\r\n\t</li>\r\n</ul>\r\n";
+	this.player = "<!-- Scene -->\r\n<div class=\"fill scene\">\r\n\t<div class=\"element-container fill\" ppg-play=\"play\" style=\"background-image:url('{{scene.background.src}}')\">\r\n\t\t<button class=\"btn btn-primary\" ui-sref=\"films()\">Stop</button>\r\n\t\t<img ng-repeat=\"item in scene.items\"\r\n\t\t\tid=\"{{item.eid}}\"\r\n\t\t\tclass=\"element\"\r\n\t\t\tppg-record=\"item.buffer\"\r\n\t\t\tplay=\"play\"\r\n\t\t\tng-src=\"{{item | imgsrc:'xl'}}\" />\r\n\t</div>\r\n</div>\r\n";
+	this.scene = "<!-- Top buttons -->\r\n<div class=\"frame frame-top orange cover\" ng-class=\"{transparent:record}\">\r\n\t<div class=\"row\">\r\n\t\t<form class=\"form-inline\">\r\n\t\t\t<div class=\"form-group\">\r\n\t\t\t\t<a class=\"action\" ui-sref=\"films()\"><i class=\"fa fa-home\"></i></a>\r\n\t\t\t\t<a class=\"action danger\" ng-show=\"scene\" ng-click=\"toggleRecord()\"><i class=\"fa\" ng-class=\"{'fa-circle':!record,'fa-pause':record}\"></i></a>\r\n\t\t\t\t<a class=\"action\" ng-show=\"scene\" ng-click=\"togglePlay()\"><i class=\"fa\" ng-class=\"{'fa-play':play<0,'fa-stop':play>=0}\"></i></a>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"form-group\" ng-show=\"scene\">\r\n\t\t\t\t<uib-progressbar style=\"width:300px\" class=\"progress-bar-danger progress-big active\" value=\"time\" type=\"success\"></uib-progressbar>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"form-group\" ng-show=\"scene\">\r\n\t\t\t\t<a class=\"action\" ng-click=\"backScene()\"><i class=\"fa fa-reply\"></i></a>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"form-group\" ng-show=\"!scene\">\r\n\t\t\t\t<a class=\"action\" ng-click=\"newScene()\"><i class=\"fa fa-plus\"></i></a>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"form-group\" ng-show=\"!scene\" style=\"width:50%\">\r\n\t\t\t\t<div ng-if=\"film.scenes.length && !scene\" ppg-carousel=\"film.scenes\">\r\n\t\t\t\t\t<img ng-repeat=\"scene in film.scenes track by scene._id\"\r\n\t\t\t\t\tng-src=\"{{scene.screenshot||'img/web/scene001.jpg'}}\"\r\n\t\t\t\t\talt=\"{{scene.name}}\"\r\n\t\t\t\t\tstyle=\"margin-right:5px;height:34px\"\r\n\t\t\t\t\tng-click=\"selectScene(scene)\"/>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t</form>\r\n\t</div>\r\n</div>\r\n\r\n<!-- Item selector -->\r\n<uib-tabset active=\"active\" class=\"frame frame-bottom pink\">\r\n\t<uib-tab index=\"-1\" heading=\"Places\">\r\n\t\t<div style=\"padding:10px\" ppg-carousel=\"allitems.backgrounds.items\">\r\n\t\t\t<img ng-repeat=\"bg in allitems.backgrounds.items\"\r\n\t\t\tclass=\"item\"\r\n\t\t\tng-class=\"{disabled:record}\"\r\n\t\t\tng-src=\"{{bg.src}}\"\r\n\t\t\tstyle=\"margin-right:5px\"\r\n\t\t\tng-click=\"setBackground(bg)\"/>\r\n\t\t</div>\r\n\t</uib-tab>\r\n\t<uib-tab ng-repeat=\"section in allitems.sections\" index=\"$index\">\r\n\t\t<uib-tab-heading>{{section.id}}</uib-tab-heading>\r\n\t\t<div style=\"padding:10px\" ppg-carousel=\"section.items\">\r\n\t\t\t<img ng-repeat=\"item in section.items\"\r\n\t\t\tclass=\"item\"\r\n\t\t\tng-class=\"{disabled:addDisabled || record}\"\r\n\t\t\tng-src=\"{{item | imgsrc:'sm'}}\"\r\n\t\t\tstyle=\"margin-right:5px\"\r\n\t\t\tng-click=\"addItem(item)\"/>\r\n\t\t</div>\r\n\t</uib-tab>\r\n</uib-tabset>\r\n\r\n<!-- Scene -->\r\n<div class=\"fill scene\">\r\n\t<div class=\"element-container fill\" ppg-play=\"play\" style=\"background-image:url('{{scene.background.src}}')\">\r\n\t\t<div class=\"trash-container\" ppg-overlap=\"film.scenes\">\r\n\t\t\t<a class=\"action trash-can\" ppg-overlap=\"film.scenes\" on-overlap=\"overlaps(item)\"><i class=\"fa fa-trash\"></i></a>\r\n\t\t</div>\r\n\t\t<img ng-repeat=\"item in scene.items\"\r\n\t\t\tid=\"{{item.eid}}\"\r\n\t\t\tclass=\"element\"\r\n\t\t\tppg-draggable\r\n\t\t\tppg-flip\r\n\t\t\tppg-record=\"item.buffer\"\r\n\t\t\tppg-effects=\"item.effects\"\r\n\t\t\ton-ppg-drop=\"itemDropped\"\r\n\t\t\trecord=\"record\" play=\"play\"\r\n\t\t\tng-src=\"{{item | imgsrc:'xl'}}\" />\r\n\t</div>\r\n</div>\r\n"
 
 	this.$get = function() {
 		return this;
@@ -656,6 +662,7 @@ angular.module("ppgmaker").service("sceneService",function($q){
 			this.screenshot = props.screenshot || "";
 
 			if(!mini) {
+				this.sound = props.sound || null;
 				this.items = props.items || [];
 				this.idfilm = props.idfilm || "";
 			}

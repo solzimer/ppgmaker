@@ -1,6 +1,7 @@
 <!-- Scene -->
 <div class="fill scene">
 	<div class="element-container fill" ppg-play="play" style="background-image:url('{{scene.background.src}}')">
+		<button class="btn btn-primary" ui-sref="films()">Stop</button>
 		<img ng-repeat="item in scene.items"
 			id="{{item.eid}}"
 			class="element"

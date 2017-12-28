@@ -1,5 +1,5 @@
 angular.module('ppgmaker').
-controller("PlayerController",function($scope,$stateParams,$timeout,sceneService){
+controller("PlayerController",function($scope,$stateParams,$state,$timeout,sceneService){
 	var idx = 0;
 	var watch = null;
 
