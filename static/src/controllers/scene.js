@@ -1,5 +1,7 @@
 angular.module('ppgmaker').
-controller("SceneController",function($scope,$q,$stateParams,$element,$interval,screenshotService,styleService,itemsService,sceneService){
+controller("SceneController",function(
+	$scope,$q,$stateParams,$element,$interval,
+	screenshotService,styleService,soundService,itemsService,sceneService){
 	var MAX = 5;
 	var MAX_TIME = 30000;
 	var recordTimeout = null;
@@ -59,6 +61,7 @@ controller("SceneController",function($scope,$q,$stateParams,$element,$interval,
 
 	function startRecord() {
 		resetBuffers();
+		soundService.startRecord("test");
 		$scope.time = 0;
 		var ti = Date.now();
 		recordTimeout = $interval(()=>{
@@ -69,6 +72,7 @@ controller("SceneController",function($scope,$q,$stateParams,$element,$interval,
 	}
 
 	function stopRecord() {
+		soundService.stopRecord("test");
 		$scope.record = false;
 		$interval.cancel(recordTimeout);
 
@@ -124,6 +128,8 @@ controller("SceneController",function($scope,$q,$stateParams,$element,$interval,
 
 	$scope.togglePlay = function() {
 		$scope.play = $scope.play? 0 : -1;
+		if($scope.play>=0) soundService.play("test");
+		else soundService.stop();
 	}
 
 	$scope.selectScene = function(scene) {

@@ -24,6 +24,12 @@ config(function($stateProvider,$urlRouterProvider,templateProvider) {
 	  template: templateProvider.player
 	});
 
+	$stateProvider.state("sound",{
+		url: '/sound',
+		controller : 'SoundController',
+	  template: templateProvider.sound
+	});
+
 	$urlRouterProvider.otherwise("/films");
 
 	console.log("App started!");

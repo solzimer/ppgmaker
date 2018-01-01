@@ -15,10 +15,22 @@
     },
     "com.darktalker.cordova.screenshot": {
       "PACKAGE_NAME": "ppgmaker"
+    },
+    "cordova-plugin-audioinput": {
+      "PACKAGE_NAME": "ppgmaker"
+    },
+    "cordova-plugin-media": {
+      "PACKAGE_NAME": "ppgmaker"
     }
   },
   "dependent_plugins": {
     "cordova-plugin-wkwebview-engine": {
+      "PACKAGE_NAME": "ppgmaker"
+    },
+    "cordova-plugin-compat": {
+      "PACKAGE_NAME": "ppgmaker"
+    },
+    "cordova-plugin-file": {
       "PACKAGE_NAME": "ppgmaker"
     }
   }
