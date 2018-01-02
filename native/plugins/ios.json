@@ -21,6 +21,9 @@
     },
     "cordova-plugin-media": {
       "PACKAGE_NAME": "ppgmaker"
+    },
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "ppgmaker"
     }
   },
   "dependent_plugins": {
@@ -28,9 +31,6 @@
       "PACKAGE_NAME": "ppgmaker"
     },
     "cordova-plugin-compat": {
-      "PACKAGE_NAME": "ppgmaker"
-    },
-    "cordova-plugin-file": {
       "PACKAGE_NAME": "ppgmaker"
     }
   }

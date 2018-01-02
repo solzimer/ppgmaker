@@ -67,6 +67,12 @@ controller("SceneController",function(
 	function stopRecordSound() {
 		$scope.media.stopRecord();
 		$scope.media.release();
+		$scope.media.blob().then(blob=>{
+			console.log("Blob OK!");
+			console.log(blob);
+		}).catch(err=>{
+			console.warn(err);
+		});
 	}
 
 	function playSound() {

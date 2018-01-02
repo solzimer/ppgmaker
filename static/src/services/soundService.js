@@ -1,4 +1,4 @@
-angular.module("ppgmaker").service("soundService",function($q){
+angular.module("ppgmaker").service("soundService",function($q,fileService){
 
 	class Sound {
 		constructor(id) {
@@ -18,6 +18,7 @@ angular.module("ppgmaker").service("soundService",function($q){
 		pause() {}
 		resume() {}
 		release() {}
+		blob(){}
 	}
 
 	class CordovaSound extends Sound {
@@ -39,6 +40,7 @@ angular.module("ppgmaker").service("soundService",function($q){
 		pause() {this._media.pause();}
 		stop() {this._media.stop();}
 		release() {this._media.release();}
+		blob() {return fileService.readAsBlob(this._src,"audio/m4a");}
 	}
 
 

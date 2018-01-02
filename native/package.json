@@ -28,7 +28,8 @@
       "cordova-plugin-audioinput": {},
       "cordova-plugin-media": {
         "MICROPHONE_USAGE_DESCRIPTION": "your usage message"
-      }
+      },
+      "cordova-plugin-file": {}
     },
     "platforms": [
       "ios"

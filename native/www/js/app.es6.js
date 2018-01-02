@@ -171,6 +171,12 @@ controller("SceneController",function(
 	function stopRecordSound() {
 		$scope.media.stopRecord();
 		$scope.media.release();
+		$scope.media.blob().then(blob=>{
+			console.log("Blob OK!");
+			console.log(blob);
+		}).catch(err=>{
+			console.warn(err);
+		});
 	}
 
 	function playSound() {
@@ -646,6 +652,47 @@ angular.module("ppgmaker").provider("template",function(){
 	}
 });
 
+angular.module("ppgmaker").service("fileService",function($q){
+
+	var ready = $q((resolve,reject)=>{
+		window.requestFileSystem(window.TEMPORARY, 5 * 1024 * 1024, function (fs) {
+	    console.log('file system open: ' + fs.name);
+	    resolve(fs);
+		},
+		reject);
+	});
+
+	ready.catch(err=>{
+		console.warn("File system not available",err);
+	});
+
+	function getFile(dirEntry,fileName,opts) {
+		return $q((resolve,reject)=>{
+			dirEntry.getFile(fileName, opts, resolve, reject);
+		});
+	}
+
+	function readFileAsBlob(fileEntry) {
+		return $q((resolve,reject)=>{
+			fileEntry.file(file=>{
+				let reader = new FileReader();
+				reader.onloadend = function() {
+					let blob = new Blob([new Uint8Array(this.result)], {type:type});
+					resolve(blob);
+				};
+				reader.readAsArrayBuffer(file);
+			});
+		});
+	}
+
+	this.readAsBlob = function(fileName,type) {
+		return ready.
+			then(fs=>fs.root).
+			then(dirEntry=>getFile(dirEntry,fileName,{create:false,exclusive:false})).
+			then(fileEntry=>readFileAsBlob(fileEntry,type));
+	}
+});
+
 angular.module("ppgmaker").service("itemsService",function($http){
 	var prModel = false;
 	var self = this;
@@ -860,7 +907,7 @@ angular.module("ppgmaker").service("screenshotService",function($q){
 	}
 });
 
-angular.module("ppgmaker").service("soundService",function($q){
+angular.module("ppgmaker").service("soundService",function($q,fileService){
 
 	class Sound {
 		constructor(id) {
@@ -880,6 +927,7 @@ angular.module("ppgmaker").service("soundService",function($q){
 		pause() {}
 		resume() {}
 		release() {}
+		blob(){}
 	}
 
 	class CordovaSound extends Sound {
@@ -901,6 +949,7 @@ angular.module("ppgmaker").service("soundService",function($q){
 		pause() {this._media.pause();}
 		stop() {this._media.stop();}
 		release() {this._media.release();}
+		blob() {return fileService.readAsBlob(this._src,"audio/m4a");}
 	}
 
 
