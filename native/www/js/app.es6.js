@@ -163,9 +163,29 @@ controller("SceneController",function(
 		});
 	}
 
+	function startRecordSound() {
+		$scope.media = soundService.create("test");
+		$scope.media.startRecord();
+	}
+
+	function stopRecordSound() {
+		$scope.media.stopRecord();
+		$scope.media.release();
+	}
+
+	function playSound() {
+		$scope.media = soundService.create("test");
+		$scope.media.play();
+	}
+
+	function stopSound() {
+		$scope.media.stop();
+		$scope.media.release();
+	}
+
 	function startRecord() {
 		resetBuffers();
-		soundService.startRecord("test");
+		startRecordSound();
 		$scope.time = 0;
 		var ti = Date.now();
 		recordTimeout = $interval(()=>{
@@ -176,7 +196,7 @@ controller("SceneController",function(
 	}
 
 	function stopRecord() {
-		soundService.stopRecord("test");
+		stopRecordSound();
 		$scope.record = false;
 		$interval.cancel(recordTimeout);
 
@@ -232,8 +252,8 @@ controller("SceneController",function(
 
 	$scope.togglePlay = function() {
 		$scope.play = $scope.play? 0 : -1;
-		if($scope.play>=0) soundService.play("test");
-		else soundService.stop();
+		if($scope.play>=0) playSound();
+		else stopSound();
 	}
 
 	$scope.selectScene = function(scene) {
@@ -841,43 +861,58 @@ angular.module("ppgmaker").service("screenshotService",function($q){
 });
 
 angular.module("ppgmaker").service("soundService",function($q){
-	var media, src;
 
-	this.startRecord = function(id) {
-		return $q((resolve,reject)=>{
-			let src = `${id}.wav`;
-	    media = new Media(src,resolve,reject);
-			media.startRecord();
-		}).finally(()=>media.release());
+	class Sound {
+		constructor(id) {
+			this.id = id;
+			this._callbacks = {};
+		}
+
+		on(evt,callback) {
+			this._callbacks[evt] = this._callbacks[id] || [];
+		}
+
+		startRecord() {}
+		stopRecord() {}
+		pauseRecord() {}
+		resumeRecord() {}
+		play() {}
+		pause() {}
+		resume() {}
+		release() {}
 	}
 
-	this.stopRecord = function() {
-		media.stopRecord();
+	class CordovaSound extends Sound {
+		constructor(id) {
+			super(id);
+			this._src = `${id}.m4a`;
+			this._media = new Media(this._src,()=>this._success(),err=>this._error(err));
+			this._callbacks["success"] = [];
+			this._callbacks["error"] = [];
+		}
+
+		_error(err) {this._callbacks.success.forEach(c=>c(err));}
+		_success() {this._callbacks.success.forEach(c=>c());}
+		startRecord(id) {this._media.startRecord();}
+		stopRecord() {this._media.stopRecord();}
+		pauseRecord() {this._media.pauseRecord();}
+		resumeRecord() {this._media.resumeRecord();}
+		play() {this._media.play();}
+		pause() {this._media.pause();}
+		stop() {this._media.stop();}
+		release() {this._media.release();}
 	}
 
-	this.pauseRecord = function() {
-		media.pauseRecord();
+
+	this.create = function(id) {
+		if(window.isCordova) {
+			return new CordovaSound(id);
+		}
+		else {
+			return new Sound(id);
+		}
 	}
 
-	this.resumeRecord = function() {
-		media.resumeRecord();
-	}
-
-	this.play = function(id) {
-		return $q((resolve,reject)=>{
-			let src = `${id}.wav`;
-	    media = new Media(src,resolve,reject);
-			media.play();
-		}).finally(()=>media.release());
-	}
-
-	this.pause = function() {
-		media.pause();
-	}
-
-	this.stop = function() {
-		media.stop();
-	}
 });
 
 angular.module("ppgmaker").service("styleService",function(){

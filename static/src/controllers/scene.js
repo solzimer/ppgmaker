@@ -59,9 +59,29 @@ controller("SceneController",function(
 		});
 	}
 
+	function startRecordSound() {
+		$scope.media = soundService.create("test");
+		$scope.media.startRecord();
+	}
+
+	function stopRecordSound() {
+		$scope.media.stopRecord();
+		$scope.media.release();
+	}
+
+	function playSound() {
+		$scope.media = soundService.create("test");
+		$scope.media.play();
+	}
+
+	function stopSound() {
+		$scope.media.stop();
+		$scope.media.release();
+	}
+
 	function startRecord() {
 		resetBuffers();
-		soundService.startRecord("test");
+		startRecordSound();
 		$scope.time = 0;
 		var ti = Date.now();
 		recordTimeout = $interval(()=>{
@@ -72,7 +92,7 @@ controller("SceneController",function(
 	}
 
 	function stopRecord() {
-		soundService.stopRecord("test");
+		stopRecordSound();
 		$scope.record = false;
 		$interval.cancel(recordTimeout);
 
@@ -128,8 +148,8 @@ controller("SceneController",function(
 
 	$scope.togglePlay = function() {
 		$scope.play = $scope.play? 0 : -1;
-		if($scope.play>=0) soundService.play("test");
-		else soundService.stop();
+		if($scope.play>=0) playSound();
+		else stopSound();
 	}
 
 	$scope.selectScene = function(scene) {
