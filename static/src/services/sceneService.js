@@ -30,6 +30,7 @@ angular.module("ppgmaker").service("sceneService",function($q){
 				this.sound = props.sound || null;
 				this.items = props.items || [];
 				this.idfilm = props.idfilm || "";
+				this._attachments = props._attachments;
 			}
 
 			if(this.items) {
@@ -40,12 +41,24 @@ angular.module("ppgmaker").service("sceneService",function($q){
 			}
 		}
 
+		audio(blob) {
+			if(blob) {
+				this._attachments = {
+					audio : {
+						type : "audio/m4a",
+						data : blob
+					}
+				}
+			}
+			else return this._attachments.audio.data;
+		}
+
 		mini() {
 			return new Scene(this,true);
 		}
 
 		fetch() {
-			return q().then(()=>sceneCol.get(this._id)).then(res=>new Scene(res));
+			return q().then(()=>sceneCol.get(this._id,{attachments: true})).then(res=>new Scene(res));
 		}
 
 		save() {

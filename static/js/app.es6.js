@@ -37,6 +37,22 @@ config(function($stateProvider,$urlRouterProvider,templateProvider) {
 });
 
 angular.module('ppgmaker').
+controller("DeleteItemController",function($uibModalInstance, item){
+	let $ctrl = this;
+
+  $ctrl.item = item;
+
+  $ctrl.ok = function () {
+    $uibModalInstance.close(true);
+  };
+
+  $ctrl.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+
+});
+
+angular.module('ppgmaker').
 controller("FilmsController",function($scope,$element,$interval,$q,sceneService){
 	$scope.films = [];
 
@@ -104,12 +120,13 @@ controller("PlayerController",function($scope,$stateParams,$state,$timeout,scene
 
 angular.module('ppgmaker').
 controller("SceneController",function(
-	$scope,$q,$stateParams,$element,$interval,
+	$scope,$q,$stateParams,$element,$interval,$uibModal,dialogService,
 	screenshotService,styleService,soundService,itemsService,sceneService){
 	var MAX = 5;
 	var MAX_TIME = 30000;
 	var recordTimeout = null;
 	var elemScene = $(".scene",$element).get(0);
+	var media = null;
 
 	$scope.addDisabled = false;
 	$scope.record = false;
@@ -164,29 +181,29 @@ controller("SceneController",function(
 	}
 
 	function startRecordSound() {
-		$scope.media = soundService.create("test");
-		$scope.media.startRecord();
+		media = soundService.create("test");
+		media.startRecord();
 	}
 
 	function stopRecordSound() {
-		$scope.media.stopRecord();
-		$scope.media.release();
-		$scope.media.blob().then(blob=>{
-			console.log("Blob OK!");
-			console.log(blob);
-		}).catch(err=>{
-			console.warn(err);
-		});
+		media.stopRecord();
+		return media.blob().
+			catch(err=>{
+				console.warn(err);
+			}).
+			finally(()=>{
+				media.release();
+			});
 	}
 
 	function playSound() {
-		$scope.media = soundService.create("test");
-		$scope.media.play();
+		media = soundService.create("test");
+		media.play();
 	}
 
 	function stopSound() {
-		$scope.media.stop();
-		$scope.media.release();
+		media.stop();
+		media.release();
 	}
 
 	function startRecord() {
@@ -202,12 +219,13 @@ controller("SceneController",function(
 	}
 
 	function stopRecord() {
-		stopRecordSound();
 		$scope.record = false;
 		$interval.cancel(recordTimeout);
 
 		return screenshotService.take(elemScene,100,100).
 			then(img=>$scope.scene.screenshot=img).
+			then(()=>stopRecordSound()).
+			then(blob=>$scope.scene.audio(blob)).
 			then(()=>$scope.scene.save()).
 			then(()=>$scope.film.update($scope.scene,true)).
 			catch(err=>console.error(err));
@@ -241,11 +259,15 @@ controller("SceneController",function(
 		let eitem = $scope.overlapItem;
 		if(eitem && eid==eitem) {
 			let idx = $scope.scene.items.findIndex(item=>item.eid==eid);
-			if(idx>=0) {
-				$scope.overlapItem = null;
-				$scope.scene.items.splice(idx,1);
-				styleService.remove(eid);
-			}
+			if(idx<0) return;
+			let item = $scope.scene.items[idx];
+			$scope.overlapItem = null;
+			dialogService.confirmRemove(item.id).then(res=>{
+				if(res) {
+					$scope.scene.items.splice(idx,1);
+					styleService.remove(eid);
+				}
+			}).catch(err=>{});
 		}
 	}
 
@@ -643,6 +665,7 @@ filter("imgsrc",function(){
 });
 
 angular.module("ppgmaker").provider("template",function(){
+	this.delete_item = "<div class=\"modal-header\">\n\t<h3 class=\"modal-title\">Remove Item</h3>\n</div>\n<div class=\"modal-body\">\n\tAre you sure you want to remove {{$ctrl.item}}\n</div>\n<div class=\"modal-footer\">\n\t<button class=\"btn btn-primary\" type=\"button\" ng-click=\"$ctrl.ok()\">OK</button>\n\t<button class=\"btn btn-warning\" type=\"button\" ng-click=\"$ctrl.cancel()\">Cancel</button>\n</div>\n";
 	this.films = "<div class=\"row\" style=\"height:50px\">\n\t<div class=\"col-lg-12\" style=\"position:fixed;width:100%;z-index:1000;\">\n\t\t<h2 class=\"pull-left\" style=\"margin-left:20px\"><a href=\"#\" ui-sref=\"film({id:'new'})\" tooltip=\"New Film\"><i class=\"fa fa-plus-circle\"></i></a></h2>\n\t\t<h2 class=\"pull-right\" style=\"margin-right:20px\"><a href=\"#\" ui-sref=\"settings()\" tootltip=\"Settings\"><i class=\"fa fa-cog\"></i></a></h2>\n\t</div>\n</div>\n\n<ul class=\"film-list\">\n\t<li ng-repeat=\"film in films\">\n\t\t<h3>\n\t\t\t<a href=\"#\" ui-sref=\"film({id:film._id})\">{{film.name}}<a>\n\t\t\t<a href=\"#\" ui-sref=\"player({id:film._id})\"><i class=\"fa fa-play\"></i></a>\n\t\t</h3>\n\t\t<div class=\"film-scenes\" ppg-carousel=\"film.scenes\">\n\t\t\t<img ng-repeat=\"scene in film.scenes\"\n\t\t\t\tui-sref=\"film({id:film._id})\"\n\t\t\t\tng-src=\"{{scene.screenshot||'img/web/scene001.jpg'}}\"/>\n\t\t</div>\n\t</li>\n</ul>\n";
 	this.player = "<!-- Scene -->\n<div class=\"fill scene\">\n\t<div class=\"element-container fill\" ppg-play=\"play\" style=\"background-image:url('{{scene.background.src}}')\">\n\t\t<button class=\"btn btn-primary\" ui-sref=\"films()\">Stop</button>\n\t\t<img ng-repeat=\"item in scene.items\"\n\t\t\tid=\"{{item.eid}}\"\n\t\t\tclass=\"element\"\n\t\t\tppg-record=\"item.buffer\"\n\t\t\tplay=\"play\"\n\t\t\tng-src=\"{{item | imgsrc:'xl'}}\" />\n\t</div>\n</div>\n";
 	this.scene = "<!-- Top buttons -->\n<div class=\"frame frame-top orange cover\" ng-class=\"{transparent:record}\">\n\t<div class=\"row\">\n\t\t<form class=\"form-inline\">\n\t\t\t<div class=\"form-group\">\n\t\t\t\t<a class=\"action\" ui-sref=\"films()\"><i class=\"fa fa-home\"></i></a>\n\t\t\t\t<a class=\"action danger\" ng-show=\"scene\" ng-click=\"toggleRecord()\"><i class=\"fa\" ng-class=\"{'fa-circle':!record,'fa-pause':record}\"></i></a>\n\t\t\t\t<a class=\"action\" ng-show=\"scene\" ng-click=\"togglePlay()\"><i class=\"fa\" ng-class=\"{'fa-play':play<0,'fa-stop':play>=0}\"></i></a>\n\t\t\t</div>\n\t\t\t<div class=\"form-group\" ng-show=\"scene\">\n\t\t\t\t<uib-progressbar style=\"width:300px\" class=\"progress-bar-danger progress-big active\" value=\"time\" type=\"success\"></uib-progressbar>\n\t\t\t</div>\n\t\t\t<div class=\"form-group\" ng-show=\"scene\">\n\t\t\t\t<a class=\"action\" ng-click=\"backScene()\"><i class=\"fa fa-reply\"></i></a>\n\t\t\t</div>\n\t\t\t<div class=\"form-group\" ng-show=\"!scene\">\n\t\t\t\t<a class=\"action\" ng-click=\"newScene()\"><i class=\"fa fa-plus\"></i></a>\n\t\t\t</div>\n\t\t\t<div class=\"form-group\" ng-show=\"!scene\" style=\"width:50%\">\n\t\t\t\t<div ng-if=\"film.scenes.length && !scene\" ppg-carousel=\"film.scenes\">\n\t\t\t\t\t<img ng-repeat=\"scene in film.scenes track by scene._id\"\n\t\t\t\t\tng-src=\"{{scene.screenshot||'img/web/scene001.jpg'}}\"\n\t\t\t\t\talt=\"{{scene.name}}\"\n\t\t\t\t\tstyle=\"margin-right:5px;height:34px\"\n\t\t\t\t\tng-click=\"selectScene(scene)\"/>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</form>\n\t</div>\n</div>\n\n<!-- Item selector -->\n<uib-tabset active=\"active\" class=\"frame frame-bottom pink\">\n\t<uib-tab index=\"-1\" heading=\"Places\">\n\t\t<div style=\"padding:10px\" ppg-carousel=\"allitems.backgrounds.items\">\n\t\t\t<img ng-repeat=\"bg in allitems.backgrounds.items\"\n\t\t\tclass=\"item\"\n\t\t\tng-class=\"{disabled:record}\"\n\t\t\tng-src=\"{{bg.src}}\"\n\t\t\tstyle=\"margin-right:5px\"\n\t\t\tng-click=\"setBackground(bg)\"/>\n\t\t</div>\n\t</uib-tab>\n\t<uib-tab ng-repeat=\"section in allitems.sections\" index=\"$index\">\n\t\t<uib-tab-heading>{{section.id}}</uib-tab-heading>\n\t\t<div style=\"padding:10px\" ppg-carousel=\"section.items\">\n\t\t\t<img ng-repeat=\"item in section.items\"\n\t\t\tclass=\"item\"\n\t\t\tng-class=\"{disabled:addDisabled || record}\"\n\t\t\tng-src=\"{{item | imgsrc:'sm'}}\"\n\t\t\tstyle=\"margin-right:5px\"\n\t\t\tng-click=\"addItem(item)\"/>\n\t\t</div>\n\t</uib-tab>\n</uib-tabset>\n\n<!-- Scene -->\n<div class=\"fill scene\">\n\t<div class=\"element-container fill\" ppg-play=\"play\" style=\"background-image:url('{{scene.background.src}}')\">\n\t\t<div class=\"trash-container\" ppg-overlap=\"film.scenes\">\n\t\t\t<a class=\"action trash-can\" ppg-overlap=\"film.scenes\" on-overlap=\"overlaps(item)\"><i class=\"fa fa-trash\"></i></a>\n\t\t</div>\n\t\t<img ng-repeat=\"item in scene.items\"\n\t\t\tid=\"{{item.eid}}\"\n\t\t\tclass=\"element\"\n\t\t\tppg-draggable\n\t\t\tppg-flip\n\t\t\tppg-record=\"item.buffer\"\n\t\t\tppg-effects=\"item.effects\"\n\t\t\ton-ppg-drop=\"itemDropped\"\n\t\t\trecord=\"record\" play=\"play\"\n\t\t\tng-src=\"{{item | imgsrc:'xl'}}\" />\n\t</div>\n</div>\n"
@@ -652,14 +675,33 @@ angular.module("ppgmaker").provider("template",function(){
 	}
 });
 
+angular.module("ppgmaker").service("dialogService",function($q, $uibModal, template){
+
+	this.confirmRemove = function(name) {
+		return $uibModal.open({
+      animation: true,
+      ariaLabelledBy: 'modal-title',
+      ariaDescribedBy: 'modal-body',
+      template: template.delete_item,
+      controller: 'DeleteItemController',
+      controllerAs: '$ctrl',
+      resolve: {
+				item: ()=>name
+      }
+    }).result;
+	}
+});
+
 angular.module("ppgmaker").service("fileService",function($q){
 
 	var ready = $q((resolve,reject)=>{
-		window.requestFileSystem(window.TEMPORARY, 5 * 1024 * 1024, function (fs) {
-	    console.log('file system open: ' + fs.name);
-	    resolve(fs);
-		},
-		reject);
+		if(!window.requestFileSystem) reject("App in browser");
+		else {
+			window.requestFileSystem(window.TEMPORARY, 5 * 1024 * 1024, function (fs) {
+				console.log('file system open: ' + fs.name);
+				resolve(fs);
+			},reject);
+		}
 	});
 
 	ready.catch(err=>{
@@ -672,7 +714,7 @@ angular.module("ppgmaker").service("fileService",function($q){
 		});
 	}
 
-	function readFileAsBlob(fileEntry) {
+	function readFileAsBlob(fileEntry,type) {
 		return $q((resolve,reject)=>{
 			fileEntry.file(file=>{
 				let reader = new FileReader();
@@ -689,7 +731,7 @@ angular.module("ppgmaker").service("fileService",function($q){
 		return ready.
 			then(fs=>fs.root).
 			then(dirEntry=>getFile(dirEntry,fileName,{create:false,exclusive:false})).
-			then(fileEntry=>readFileAsBlob(fileEntry,type));
+			then(fileEntry=>readFileAsBlob(fileEntry,type||'audio/m4a'));
 	}
 });
 
@@ -744,6 +786,7 @@ angular.module("ppgmaker").service("sceneService",function($q){
 				this.sound = props.sound || null;
 				this.items = props.items || [];
 				this.idfilm = props.idfilm || "";
+				this._attachments = props._attachments;
 			}
 
 			if(this.items) {
@@ -754,12 +797,24 @@ angular.module("ppgmaker").service("sceneService",function($q){
 			}
 		}
 
+		audio(blob) {
+			if(blob) {
+				this._attachments = {
+					audio : {
+						type : "audio/m4a",
+						data : blob
+					}
+				}
+			}
+			else return this._attachments.audio.data;
+		}
+
 		mini() {
 			return new Scene(this,true);
 		}
 
 		fetch() {
-			return q().then(()=>sceneCol.get(this._id)).then(res=>new Scene(res));
+			return q().then(()=>sceneCol.get(this._id,{attachments: true})).then(res=>new Scene(res));
 		}
 
 		save() {

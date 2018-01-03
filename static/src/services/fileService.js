@@ -1,11 +1,13 @@
 angular.module("ppgmaker").service("fileService",function($q){
 
 	var ready = $q((resolve,reject)=>{
-		window.requestFileSystem(window.TEMPORARY, 5 * 1024 * 1024, function (fs) {
-	    console.log('file system open: ' + fs.name);
-	    resolve(fs);
-		},
-		reject);
+		if(!window.requestFileSystem) reject("App in browser");
+		else {
+			window.requestFileSystem(window.TEMPORARY, 5 * 1024 * 1024, function (fs) {
+				console.log('file system open: ' + fs.name);
+				resolve(fs);
+			},reject);
+		}
 	});
 
 	ready.catch(err=>{
@@ -18,7 +20,7 @@ angular.module("ppgmaker").service("fileService",function($q){
 		});
 	}
 
-	function readFileAsBlob(fileEntry) {
+	function readFileAsBlob(fileEntry,type) {
 		return $q((resolve,reject)=>{
 			fileEntry.file(file=>{
 				let reader = new FileReader();
@@ -35,6 +37,6 @@ angular.module("ppgmaker").service("fileService",function($q){
 		return ready.
 			then(fs=>fs.root).
 			then(dirEntry=>getFile(dirEntry,fileName,{create:false,exclusive:false})).
-			then(fileEntry=>readFileAsBlob(fileEntry,type));
+			then(fileEntry=>readFileAsBlob(fileEntry,type||'audio/m4a'));
 	}
 });

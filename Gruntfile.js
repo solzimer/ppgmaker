@@ -69,7 +69,7 @@ module.exports = function(grunt) {
 
 		watch: {
 			app: {
-				files: ['static/src/**/*.js','static/views/*.html'],
+				files: ['static/src/**/*.js','static/views/**/*.html'],
 				tasks: ['run:templates','concat:app'],
 				options: {spawn: false,},
 			},

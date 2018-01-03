@@ -1,11 +1,12 @@
 angular.module('ppgmaker').
 controller("SceneController",function(
-	$scope,$q,$stateParams,$element,$interval,
+	$scope,$q,$stateParams,$element,$interval,$uibModal,dialogService,
 	screenshotService,styleService,soundService,itemsService,sceneService){
 	var MAX = 5;
 	var MAX_TIME = 30000;
 	var recordTimeout = null;
 	var elemScene = $(".scene",$element).get(0);
+	var media = null;
 
 	$scope.addDisabled = false;
 	$scope.record = false;
@@ -60,29 +61,29 @@ controller("SceneController",function(
 	}
 
 	function startRecordSound() {
-		$scope.media = soundService.create("test");
-		$scope.media.startRecord();
+		media = soundService.create("test");
+		media.startRecord();
 	}
 
 	function stopRecordSound() {
-		$scope.media.stopRecord();
-		$scope.media.release();
-		$scope.media.blob().then(blob=>{
-			console.log("Blob OK!");
-			console.log(blob);
-		}).catch(err=>{
-			console.warn(err);
-		});
+		media.stopRecord();
+		return media.blob().
+			catch(err=>{
+				console.warn(err);
+			}).
+			finally(()=>{
+				media.release();
+			});
 	}
 
 	function playSound() {
-		$scope.media = soundService.create("test");
-		$scope.media.play();
+		media = soundService.create("test");
+		media.play();
 	}
 
 	function stopSound() {
-		$scope.media.stop();
-		$scope.media.release();
+		media.stop();
+		media.release();
 	}
 
 	function startRecord() {
@@ -98,12 +99,13 @@ controller("SceneController",function(
 	}
 
 	function stopRecord() {
-		stopRecordSound();
 		$scope.record = false;
 		$interval.cancel(recordTimeout);
 
 		return screenshotService.take(elemScene,100,100).
 			then(img=>$scope.scene.screenshot=img).
+			then(()=>stopRecordSound()).
+			then(blob=>$scope.scene.audio(blob)).
 			then(()=>$scope.scene.save()).
 			then(()=>$scope.film.update($scope.scene,true)).
 			catch(err=>console.error(err));
@@ -137,11 +139,15 @@ controller("SceneController",function(
 		let eitem = $scope.overlapItem;
 		if(eitem && eid==eitem) {
 			let idx = $scope.scene.items.findIndex(item=>item.eid==eid);
-			if(idx>=0) {
-				$scope.overlapItem = null;
-				$scope.scene.items.splice(idx,1);
-				styleService.remove(eid);
-			}
+			if(idx<0) return;
+			let item = $scope.scene.items[idx];
+			$scope.overlapItem = null;
+			dialogService.confirmRemove(item.id).then(res=>{
+				if(res) {
+					$scope.scene.items.splice(idx,1);
+					styleService.remove(eid);
+				}
+			}).catch(err=>{});
 		}
 	}
 
