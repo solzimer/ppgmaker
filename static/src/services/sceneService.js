@@ -45,7 +45,7 @@ angular.module("ppgmaker").service("sceneService",function($q){
 			if(blob) {
 				this._attachments = {
 					audio : {
-						type : "audio/m4a",
+						content_type : blob.type,
 						data : blob
 					}
 				}
@@ -58,11 +58,11 @@ angular.module("ppgmaker").service("sceneService",function($q){
 		}
 
 		fetch() {
-			return q().then(()=>sceneCol.get(this._id,{attachments: true})).then(res=>new Scene(res));
+			return q().then(()=>sceneCol.get(this._id,{attachments:true, binary:true})).then(res=>new Scene(res));
 		}
 
 		save() {
-			return q().then(()=>sceneCol.put(this)).then(res=>this);
+			return q().then(()=>sceneCol.put(this)).then(res=>this.fetch());
 		}
 
 		remove() {

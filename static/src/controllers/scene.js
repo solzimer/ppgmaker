@@ -1,7 +1,7 @@
 angular.module('ppgmaker').
 controller("SceneController",function(
 	$scope,$q,$stateParams,$element,$interval,$uibModal,dialogService,
-	screenshotService,styleService,soundService,itemsService,sceneService){
+	screenshotService,styleService,soundService,itemsService,sceneService) {
 	var MAX = 5;
 	var MAX_TIME = 30000;
 	var recordTimeout = null;
@@ -61,7 +61,7 @@ controller("SceneController",function(
 	}
 
 	function startRecordSound() {
-		media = soundService.create("test");
+		media = soundService.recorder("test");
 		media.startRecord();
 	}
 
@@ -77,7 +77,7 @@ controller("SceneController",function(
 	}
 
 	function playSound() {
-		media = soundService.create("test");
+		media = soundService.player("test",$scope.scene.audio());
 		media.play();
 	}
 
