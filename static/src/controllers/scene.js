@@ -107,6 +107,7 @@ controller("SceneController",function(
 			then(()=>stopRecordSound()).
 			then(blob=>$scope.scene.audio(blob)).
 			then(()=>$scope.scene.save()).
+			then(scn=>$scope.scene = scn).
 			then(()=>$scope.film.update($scope.scene,true)).
 			catch(err=>console.error(err));
 	}

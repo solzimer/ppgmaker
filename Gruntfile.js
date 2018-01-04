@@ -1,5 +1,6 @@
 const
 	LIB = 'bower_components',
+	LIB_OWN = 'lib/web',
 	JS = 'static/js';
 
 module.exports = function(grunt) {
@@ -62,6 +63,7 @@ module.exports = function(grunt) {
 						`${LIB}/pouchdb/dist/pouchdb.js`,
 						`${LIB}/pouchdb/dist/pouchdb.find.js`,
 						`${LIB}/html2canvas/build/html2canvas.js`,
+						`${LIB_OWN}/pouchdb.cordova-sqlite.js`,
 					]
 				}
     	}

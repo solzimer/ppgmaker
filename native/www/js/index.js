@@ -23,6 +23,7 @@ var app = {
 
 		document.body.ontouchmove = function (e) {e.preventDefault();} // Disable scrolling.
 		document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+		window.isCordova = true;
 	},
 
 	// deviceready Event Handler
@@ -30,7 +31,7 @@ var app = {
 	// Bind any cordova events here. Common events are:
 	// 'pause', 'resume', etc.
 	onDeviceReady: function() {
-		window.isCordova = true;
+		angular.bootstrap(document.body, ["ppgmaker"]);
 		this.receivedEvent('deviceready');
 	},
 
