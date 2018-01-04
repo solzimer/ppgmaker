@@ -24,6 +24,9 @@
     },
     "cordova-plugin-file": {
       "PACKAGE_NAME": "ppgmaker"
+    },
+    "cordova-plugin-sqlite-2": {
+      "PACKAGE_NAME": "ppgmaker"
     }
   },
   "dependent_plugins": {

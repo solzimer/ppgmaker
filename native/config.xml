@@ -33,5 +33,6 @@
         <variable name="MICROPHONE_USAGE_DESCRIPTION" value="your usage message" />
     </plugin>
     <plugin name="cordova-plugin-file" spec="^6.0.1" />
+    <plugin name="cordova-plugin-sqlite-2" spec="^1.0.4" />
     <engine name="ios" spec="^4.5.4" />
 </widget>

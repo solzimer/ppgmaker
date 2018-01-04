@@ -264,6 +264,7 @@ controller("SceneController",function(
 			then(()=>stopRecordSound()).
 			then(blob=>$scope.scene.audio(blob)).
 			then(()=>$scope.scene.save()).
+			then(scn=>$scope.scene = scn).
 			then(()=>$scope.film.update($scope.scene,true)).
 			catch(err=>console.error(err));
 	}
@@ -836,6 +837,7 @@ angular.module("ppgmaker").service("itemsService",function($http){
 });
 
 angular.module("ppgmaker").service("sceneService",function($q){
+	const engine = window.isCordova? {adapter: 'cordova-sqlite'} : undefined;
 	var self = this;
 	var filmCol, sceneCol;
 
@@ -971,8 +973,8 @@ angular.module("ppgmaker").service("sceneService",function($q){
 	}
 
 	function init() {
-		filmCol = new PouchDB('ppgmaker_films');
-		sceneCol = new PouchDB('ppgmaker_scenes');
+		filmCol = new PouchDB('ppgmaker_films',engine);
+		sceneCol = new PouchDB('ppgmaker_scenes',engine);
 	}
 
 	this.newFilm = function(film) {
