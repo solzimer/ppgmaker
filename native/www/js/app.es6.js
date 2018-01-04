@@ -327,11 +327,13 @@ controller("SceneController",function(
 	}
 
 	$scope.backScene = function() {
-		stopRecord().then(()=>{
-			$scope.play = -1;
-			$scope.scene = null;
-			styleService.clean();
-		});
+		$q.resolve($scope.record).
+			then(res=>res?stopRecord():true).
+			then(()=>{
+				$scope.play = -1;
+				$scope.scene = null;
+				styleService.clean();
+			});
 	}
 
 	init();
