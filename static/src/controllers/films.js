@@ -1,5 +1,5 @@
 angular.module('ppgmaker').
-controller("FilmsController",function($scope,$element,$interval,$q,dialogService,sceneService) {
+controller("FilmsController",function($scope,$element,$interval,$q,dialogService,sceneService){
 	$scope.films = [];
 
 	function init() {
