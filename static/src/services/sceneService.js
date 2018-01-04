@@ -126,7 +126,8 @@ angular.module("ppgmaker").service("sceneService",function($q){
 
 		drop() {
 			return q().
-				then(()=>sceneCol.bulkDocs(this.idscenes.map(del))).
+				then(()=>this.scenes.forEach(scn=>scn._deleted=true)).
+				then(()=>sceneCol.bulkDocs(this.scenes)).
 				then(res=>filmCol.remove(this)).
 				then(res=>this);
 		}

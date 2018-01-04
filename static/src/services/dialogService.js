@@ -13,4 +13,18 @@ angular.module("ppgmaker").service("dialogService",function($q, $uibModal, templ
       }
     }).result;
 	}
+
+	this.renameItem = function(name) {
+		return $uibModal.open({
+      animation: true,
+      ariaLabelledBy: 'modal-title',
+      ariaDescribedBy: 'modal-body',
+      template: template.rename_item,
+      controller: 'RenameItemController',
+      controllerAs: '$ctrl',
+      resolve: {
+				item: ()=>name
+      }
+    }).result;
+	}
 });

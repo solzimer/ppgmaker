@@ -10,6 +10,8 @@
 		<h3>
 			<a href="#" ui-sref="film({id:film._id})">{{film.name}}<a>
 			<a href="#" ui-sref="player({id:film._id})"><i class="fa fa-play"></i></a>
+			<a href="#" ng-click="rename(film)"><i class="fa fa-pencil"></i></a>
+			<a href="#" ng-click="delete(film)"><i class="fa fa-trash"></i></a>
 		</h3>
 		<div class="film-scenes" ppg-carousel="film.scenes">
 			<img ng-repeat="scene in film.scenes"
