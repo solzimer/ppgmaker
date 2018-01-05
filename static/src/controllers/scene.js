@@ -34,6 +34,13 @@ controller("SceneController",function(
 			console.error(err);
 		});
 
+		$scope.$watch("play",(newval,oldval)=>{
+			if(newval!=oldval) {
+				if(newval>=0) playSound();
+				else stopSound();				
+			}
+		})
+
 		setupBars();
 	}
 
@@ -159,8 +166,6 @@ controller("SceneController",function(
 
 	$scope.togglePlay = function() {
 		$scope.play = $scope.play? 0 : -1;
-		if($scope.play>=0) playSound();
-		else stopSound();
 	}
 
 	$scope.selectScene = function(scene) {

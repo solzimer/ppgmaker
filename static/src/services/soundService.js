@@ -91,20 +91,30 @@ angular.module("ppgmaker").service("soundService",function($q,audio,fileService)
 	}
 
 	class CordovaAudioPlayer extends audio.AudioPlayer {
-		constructor(id) {
+		constructor(id,blob) {
 			super(id);
 			this._src = `${id}.m4a`;
-			this._media = new Media(this._src,()=>this._success(),err=>this._error(err));
+			this._ready = null;
+			this._media = null;
 			this._callbacks["success"] = [];
 			this._callbacks["error"] = [];
+			this._init(this._src,blob);
+		}
+		_init(src,blob) {
+			this._ready = fileService.
+				writeBlob(src,blob).
+				then(()=>{
+					this._media = new Media(src,()=>this._success(),err=>this._error(err));
+					return this._media;
+				});
 		}
 		_error(err) {this._callbacks.success.forEach(c=>c(err));}
 		_success() {this._callbacks.success.forEach(c=>c());}
-		play() {this._media.play();}
-		pause() {this._media.pause();}
-		resume() {this._media.resume();}
-		stop() {this._media.stop();}
-		release() {this._media.release();}
+		play() {this._ready.then(m=>m.play());}
+		pause() {this._ready.then(m=>m.pause());}
+		resume() {this._ready.then(m=>m.resume());}
+		stop() {this._ready.then(m=>m.stop());}
+		release() {this._ready.then(m=>m.release());}
 	}
 
 	this.recorder = function(id) {

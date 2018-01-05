@@ -28,8 +28,19 @@ angular.module("ppgmaker").service("fileService",function($q){
 					let blob = new Blob([new Uint8Array(this.result)], {type:type});
 					resolve(blob);
 				};
+				reader.onerror = function(err) {reject(e)};
 				reader.readAsArrayBuffer(file);
 			});
+		});
+	}
+
+	function writeBlobAsFile(fileEntry,blob) {
+		return $q((resolve,reject)=>{
+	    fileEntry.createWriter(writer=>{
+				writer.onwriteend = function() {resolve(blob)};
+				writer.onerror = function(err) {reject(e)};
+				writer.write(blob);
+	    });
 		});
 	}
 
@@ -38,5 +49,12 @@ angular.module("ppgmaker").service("fileService",function($q){
 			then(fs=>fs.root).
 			then(dirEntry=>getFile(dirEntry,fileName,{create:false,exclusive:false})).
 			then(fileEntry=>readFileAsBlob(fileEntry,type||'audio/m4a'));
+	}
+
+	this.writeBlob = function(fileName,blob) {
+		return ready.
+			then(fs=>fs.root).
+			then(dirEntry=>getFile(dirEntry,fileName,{create:false,exclusive:false})).
+			then(fileEntry=>writeBlobAsFile(fileEntry,blob));
 	}
 });
