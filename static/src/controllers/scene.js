@@ -26,7 +26,7 @@ controller("SceneController",function(
 		});
 
 		sceneService.findFilm({_id:$stateParams.id}).then(film=>{
-			if(!film) return sceneService.newFilm({name:"testppg"}).save();
+			if(!film) return sceneService.newFilm({name:"New Film"}).save();
 			else return film;
 		}).then(film=>{
 			$scope.film = film;
@@ -144,10 +144,8 @@ controller("SceneController",function(
 			let item = $scope.scene.items[idx];
 			$scope.overlapItem = null;
 			dialogService.confirmRemove(item.id).then(res=>{
-				if(res) {
-					$scope.scene.items.splice(idx,1);
-					styleService.remove(eid);
-				}
+				$scope.scene.items.splice(idx,1);
+				styleService.remove(eid);
 			}).catch(err=>{});
 		}
 	}
@@ -167,6 +165,16 @@ controller("SceneController",function(
 
 	$scope.selectScene = function(scene) {
 		scene.fetch().then(res=>$scope.scene = res);
+	}
+
+	$scope.removeScene = function() {
+		dialogService.
+			confirmRemove("scene").
+			then(res=>$scope.film.remove($scope.scene)).
+			then(res=>$scope.backScene()).
+			catch(err=>{
+				console.warn(err);
+			});
 	}
 
 	$scope.backScene = function() {

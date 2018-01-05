@@ -1,7 +1,7 @@
-<div class="row" style="height:50px">
-	<div class="col-lg-12" style="position:fixed;width:100%;z-index:1000;">
-		<h2 class="pull-left" style="margin-left:20px"><a href="#" ui-sref="film({id:'new'})" tooltip="New Film"><i class="fa fa-plus-circle"></i></a></h2>
-		<h2 class="pull-right" style="margin-right:20px"><a href="#" ui-sref="settings()" tootltip="Settings"><i class="fa fa-cog"></i></a></h2>
+<div class="row action-bar">
+	<div class="col-lg-12">
+		<h4 class="pull-left"><a href="#" class="action" ui-sref="film({id:'new'})" tooltip="New Film"><i class="fa fa-plus-circle"></i></a></h4>
+		<h4 class="pull-right" style="margin-right:12px"><a href="#" class="action" ui-sref="settings()" tootltip="Settings"><i class="fa fa-cog"></i></a></h4>
 	</div>
 </div>
 
@@ -9,10 +9,10 @@
 	<li ng-repeat="film in films">
 		<h3>
 			<a href="#" ui-sref="film({id:film._id})">{{film.name}}<a>
-			<div class="pull-right" style="margin-right:54px">
-				<a href="#" ui-sref="player({id:film._id})"><i class="fa fa-play"></i></a>
-				<a href="#" ng-click="rename(film)"><i class="fa fa-pencil"></i></a>
-				<a href="#" ng-click="delete(film)"><i class="fa fa-trash"></i></a>
+			<div class="pull-right" style="margin-right:24px">
+				<a href="#" class="mini-action" ui-sref="player({id:film._id})"><i class="fa fa-play"></i></a>
+				<a href="#" class="mini-action" ng-click="rename(film)"><i class="fa fa-pencil"></i></a>
+				<a href="#" class="mini-action" ng-click="delete(film)"><i class="fa fa-trash"></i></a>
 			</div>
 		</h3>
 		<div class="film-scenes" ppg-carousel="film.scenes">

@@ -13,9 +13,39 @@ html, body {
 }
 
 body {
-	background: url('../img/web/bg-home001.jpg') center bottom no-repeat;
+	/*background: url('../img/web/bg-home001.jpg') center bottom repeat-y;*/
 	background-size: 100% auto;
 	background-attachment: fixed;
+	background-color: #ffc0c0;
+}
+
+a {
+    color: #ef3c85;
+    text-decoration: none;
+    text-shadow: 5px 4px 13px;
+}
+
+.form-control {
+	font-size: 1em;
+}
+
+.modal-content {
+	background-color: #a26a00;
+}
+
+.modal-header {
+  background-color: #ffb551;
+  border-radius: 6px 6px 0 0;
+	border-bottom: none;
+}
+
+.modal-body {
+  color: white;
+  font-size: 1.4em;
+}
+
+.modal-footer {
+  border-top: none;
 }
 
 .transparent {
@@ -30,11 +60,25 @@ body {
 	width: 100%;
 }
 
+.action-bar {
+	height: 65px;
+	box-shadow: 0px 7px 13px 0px #00000063;
+	background-color: #faaecdbd;
+	position: fixed;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	left: 0;
+	top: 0;
+	z-index: 1000;
+}
+
 .film-list {
 	list-style: none;
 	padding: 0;
 	margin: 0;
-	margin-left: 100px;
+	margin-left: 50px;
+	margin-top: 90px;
 }
 
 .film-list .film-scenes {
@@ -56,6 +100,11 @@ a.action {
 	color:#FFF;
 	margin-left: 10px;
 	cursor: pointer;
+	text-shadow: none;
+}
+
+a.mini-action {
+	margin-left: 15px;
 }
 
 .progress {

@@ -66,7 +66,7 @@ angular.module("ppgmaker").service("soundService",function($q,audio,fileService)
 
 		play() {this._elem.play();}
 		pause() {this._elem.pause();}
-		stop() {this._elem.stop();}
+		stop() {this._elem.pause();}
 		resume() {this._elem.play();}
 		release() {}
 	}
