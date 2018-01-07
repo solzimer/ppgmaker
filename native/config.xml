@@ -2,10 +2,10 @@
 <widget id="ppgmaker" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>PPGMaker</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        Story maker
     </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+    <author email="solzimer@gmail.com" href="https://github.com/solzimer">
+        David Gómez Matarrodona
     </author>
     <content src="index.html" />
     <access origin="*" />
@@ -30,7 +30,7 @@
     <plugin name="com.darktalker.cordova.screenshot" spec="git+https://github.com/gitawego/cordova-screenshot.git" />
     <plugin name="cordova-plugin-audioinput" spec="https://github.com/edimuj/cordova-plugin-audioinput.git" />
     <plugin name="cordova-plugin-media" spec="^5.0.1">
-        <variable name="MICROPHONE_USAGE_DESCRIPTION" value="your usage message" />
+        <variable name="MICROPHONE_USAGE_DESCRIPTION" value="Record voice from microphone" />
     </plugin>
     <plugin name="cordova-plugin-file" spec="^6.0.1" />
     <plugin name="cordova-plugin-sqlite-2" spec="^1.0.4" />

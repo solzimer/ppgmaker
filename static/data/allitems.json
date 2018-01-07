@@ -62,9 +62,21 @@
 			]
 		},
 		{
-			"id" : "villains",
+			"id" : "loud family",
 			"order" : 2,
-			"items" :	[]
+			"items" :	[
+				{"id":"lily", "src":"img/loud/lily.png","xl":"xl","sm":"sm","buffer":[]},
+				{"id":"lisa", "src":"img/loud/lisa.png","xl":"xl","sm":"sm","buffer":[]},
+				{"id":"lola", "src":"img/loud/lola.png","xl":"xl","sm":"sm","buffer":[]},
+				{"id":"lana", "src":"img/loud/lana.png","xl":"xl","sm":"sm","buffer":[]},
+				{"id":"lucy", "src":"img/loud/lucy.png","xl":"xl","sm":"sm","buffer":[]},
+				{"id":"lincoln", "src":"img/loud/lincoln.png","xl":"xl","sm":"sm","buffer":[]},
+				{"id":"lynn", "src":"img/loud/lynn.png","xl":"xl","sm":"sm","buffer":[]},
+				{"id":"luan", "src":"img/loud/luan.png","xl":"xl","sm":"sm","buffer":[]},
+				{"id":"luna", "src":"img/loud/luna.png","xl":"xl","sm":"sm","buffer":[]},
+				{"id":"leni", "src":"img/loud/leni.png","xl":"xl","sm":"sm","buffer":[]},
+				{"id":"lori", "src":"img/loud/lori.png","xl":"xl","sm":"sm","buffer":[]}
+			]
 		}
 	]
 }
